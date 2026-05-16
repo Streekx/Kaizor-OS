@@ -2,5 +2,7 @@
 using namespace std;
 
 void systemInit() {
-    cout << "Kaizor Core System Initialized" << endl;
+    cout << "[CORE] System Initialized" << endl;
+    cout << "[CORE] Memory OK" << endl;
+    cout << "[CORE] CPU OK" << endl;
 }
