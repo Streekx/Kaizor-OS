@@ -2,5 +2,5 @@
 using namespace std;
 
 void openSettings() {
-    cout << "Settings Opened" << endl;
+    cout << "[APP] Settings Opened" << endl;
 }
