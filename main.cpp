@@ -1,3 +1,4 @@
+
 #include <iostream>
 using namespace std;
 
@@ -56,6 +57,23 @@ int main() {
     wm.createWindow("Settings");
 
     cout << "\n[KAIZOR OS READY]" << endl;
+
+    #include <iostream>
+using namespace std;
+
+class DisplayServer {
+
+public:
+
+    void init() {
+        cout << "[DISPLAY] Server Started" << endl;
+        cout << "[DISPLAY] Screen Buffer Ready" << endl;
+    }
+
+    void createSurface(string name) {
+        cout << "[DISPLAY] Surface Created: " << name << endl;
+    }
+};
 
     return 0;
 }
