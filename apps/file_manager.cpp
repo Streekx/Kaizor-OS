@@ -2,5 +2,5 @@
 using namespace std;
 
 void openFileManager() {
-    cout << "File Manager Opened" << endl;
+    cout << "[APP] File Manager Opened" << endl;
 }
