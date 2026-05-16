@@ -1,0 +1,4 @@
+Kaizor Theme:
+- Dark Mode
+- Glass UI
+- Green Nature Accent
