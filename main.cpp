@@ -66,6 +66,11 @@
 #include "audio/sound_driver.h"
 #include "audio/media.h"
 
+#include "kernel/freebsd_bridge.h"
+#include "kernel/init_system.h"
+#include "kernel/startup.h"
+#include "kernel/hardware.h"
+
 using namespace std;
 
 int main() {
@@ -73,145 +78,255 @@ int main() {
     cout << "========== KAIZOR OS =========="
          << endl;
 
+    // HARDWARE
+    Hardware hardware;
+
+    hardware.detectCPU();
+
+    hardware.detectGPU();
+
+    hardware.detectRAM();
+
+    // FREEBSD
+    FreeBSDBridge freebsd;
+
+    freebsd.detectKernel();
+
+    freebsd.mountSystem();
+
+    freebsd.startUserspace();
+
+    // INIT
+    InitSystem init;
+
+    init.loadServices();
+
+    init.startRuntime();
+
+    // STARTUP
+    Startup startup;
+
+    startup.bootSequence();
+
+    startup.loadDesktop();
+
+    // BOOT
     Boot boot;
+
     boot.start();
 
     Splash splash;
+
     splash.show();
 
+    // FILESYSTEM
     FileSystem filesystem;
+
     filesystem.checkDisks();
+
     filesystem.mount();
 
+    // PACKAGE SYSTEM
     PackageManager packages;
+
     packages.init();
+
     packages.loadPackages();
 
+    // SERVICES
     ServiceManager services;
+
     services.startServices();
 
+    // LOGIN
     LoginManager login;
+
     login.login();
 
+    // SESSION
     SessionManager session;
+
     session.startSession();
 
+    // DISPLAY
     DisplayServer display;
+
     display.init();
 
+    // COMPOSITOR
     Compositor compositor;
+
     compositor.init();
 
+    // RENDERER
     Renderer renderer;
+
     renderer.init();
 
+    // SDL
     SDLBackend sdl;
+
     sdl.init();
+
     sdl.createWindow();
 
+    // SURFACE
     SurfaceManager surface;
+
     surface.createSurface();
 
+    // GPU
     GPURenderer gpu;
+
     gpu.initGPU();
 
+    // ANIMATION
     Animations animations;
+
     animations.fadeIn();
 
+    // THEME
     ThemeEngine theme;
+
     theme.loadTheme();
 
+    // FONT
     FontRenderer fonts;
+
     fonts.loadFonts();
+
     fonts.renderText();
 
+    // WALLPAPER
     Wallpaper wallpaper;
+
     wallpaper.load();
+
     wallpaper.render();
 
     WallpaperEngine wallpaperEngine;
+
     wallpaperEngine.loadWallpaper();
+
     wallpaperEngine.animateWallpaper();
 
+    // WIDGETS
     WidgetPanel panel;
+
     panel.load();
+
     panel.render();
 
+    // CURSOR
     Cursor cursor;
+
     cursor.move(200,150);
+
     cursor.render();
 
+    // INPUT
     InputManager input;
+
     input.init();
 
     Keyboard keyboard;
+
     keyboard.listen();
 
     Mouse mouse;
+
     mouse.track();
 
     input.pollEvents();
 
     // NETWORK
     NetworkManager network;
+
     network.init();
+
     network.connect();
 
     WiFi wifi;
+
     wifi.scan();
+
     wifi.connect();
+
     wifi.status();
 
     Ethernet ethernet;
+
     ethernet.detectCable();
+
     ethernet.connect();
 
     DNS dns;
+
     dns.resolve();
 
     // AUDIO
     SoundDriver soundDriver;
+
     soundDriver.detect();
+
     soundDriver.initialize();
 
     AudioServer audioServer;
+
     audioServer.start();
 
     Mixer mixer;
+
     mixer.load();
+
     mixer.volume(80);
 
     Media media;
+
     media.play();
 
     // SYSTEM
     PowerManager power;
+
     power.init();
+
     power.batteryStatus();
 
     LockScreen lockScreen;
+
     lockScreen.unlock();
 
     SystemMonitor monitor;
+
     monitor.cpuUsage();
+
     monitor.ramUsage();
+
     monitor.gpuUsage();
 
     // PROCESS
     ProcessManager process;
+
     process.init();
 
     // DESKTOP
     DesktopShell desktop;
+
     desktop.load();
 
     Notifications notifications;
+
     notifications.push(
         "Welcome To Kaizor OS"
     );
 
     NotificationCenter notificationCenter;
+
     notificationCenter.open();
+
+    notificationCenter.push(
+        "System Ready"
+    );
 
     notificationCenter.push(
         "Network Connected"
@@ -221,30 +336,48 @@ int main() {
         "Audio Ready"
     );
 
+    // LAUNCHER
     Launcher launcher;
+
     launcher.init();
+
     launcher.open();
 
+    // TASKBAR
     Taskbar taskbar;
+
     taskbar.init();
+
     taskbar.render();
 
+    // DOCK
     Dock dock;
+
     dock.init();
+
     dock.render();
 
     DockRuntime dockRuntime;
+
     dockRuntime.loadApps();
+
     dockRuntime.render();
 
+    // WORKSPACE
     Workspace workspace;
+
     workspace.init();
+
     workspace.switchWorkspace(1);
 
+    // START MENU
     StartMenu startMenu;
+
     startMenu.open();
+
     startMenu.render();
 
+    // ICONS
     DesktopIcon icon1(
         "Browser",
         50,
@@ -258,13 +391,17 @@ int main() {
     );
 
     icon1.render();
+
     icon2.render();
 
+    // APP LAUNCH
     AppLauncher launcherRuntime;
+
     launcherRuntime.launch(
         "Browser"
     );
 
+    // BUTTON
     Button startButton(
         "Start",
         10,
@@ -274,10 +411,12 @@ int main() {
     );
 
     startButton.render();
+
     startButton.click();
 
     // APPS
     FileManager files;
+
     files.open();
 
     process.startProcess(
@@ -285,6 +424,7 @@ int main() {
     );
 
     Settings settings;
+
     settings.open();
 
     process.startProcess(
@@ -292,6 +432,7 @@ int main() {
     );
 
     Terminal terminal;
+
     terminal.open();
 
     process.startProcess(
@@ -329,15 +470,19 @@ int main() {
 
     wm.renderWindows();
 
+    // COMPOSITOR
     compositor.compose();
 
+    // DISPLAY
     display.refresh();
 
     cout << "[KAIZOR READY]"
          << endl;
 
+    // GUI LOOP
     sdl.eventLoop();
 
+    // SHUTDOWN
     media.stop();
 
     audioServer.stop();
