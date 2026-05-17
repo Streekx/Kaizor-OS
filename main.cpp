@@ -18,6 +18,14 @@
 #include "input/keyboard.h"
 #include "input/mouse.h"
 
+#include "apps/file_manager/file_manager.h"
+#include "apps/settings/settings.h"
+#include "apps/terminal/terminal.h"
+
+#include "core/process_manager.h"
+
+#include "themes/theme_engine.h"
+
 using namespace std;
 
 int main() {
@@ -51,6 +59,11 @@ int main() {
 
     animations.fadeIn();
 
+    // THEME
+    ThemeEngine theme;
+
+    theme.loadTheme();
+
     // INPUT
     InputManager input;
 
@@ -65,6 +78,11 @@ int main() {
     mouse.track();
 
     input.pollEvents();
+
+    // PROCESS MANAGER
+    ProcessManager process;
+
+    process.init();
 
     // DESKTOP
     DesktopShell desktop;
@@ -105,6 +123,31 @@ int main() {
     workspace.init();
 
     workspace.switchWorkspace(1);
+
+    // APPS
+    FileManager files;
+
+    files.open();
+
+    process.startProcess(
+        "File Manager"
+    );
+
+    Settings settings;
+
+    settings.open();
+
+    process.startProcess(
+        "Settings"
+    );
+
+    Terminal terminal;
+
+    terminal.open();
+
+    process.startProcess(
+        "Terminal"
+    );
 
     // WINDOW MANAGER
     WindowManager wm;
