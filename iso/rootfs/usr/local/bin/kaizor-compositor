@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "[COMPOSITOR] Kaizor compositor started" | tee -a /var/log/kaizor.log
+echo "[COMPOSITOR] Using SDL/OpenGL backend (placeholder)" | tee -a /var/log/kaizor.log
+
+while true
+do
+    sleep 2
+done
