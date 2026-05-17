@@ -1,11 +1,11 @@
-#ifndef FILE_MANAGER_H
-#define FILE_MANAGER_H
+#include <iostream>
 
-class FileManager {
+#include "file_manager.h"
 
-public:
+using namespace std;
 
-    void open();
-};
+void FileManager::open() {
 
-#endif
+    cout << "[APP] File Manager Opened"
+         << endl;
+}
