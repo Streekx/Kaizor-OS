@@ -1,16 +1,69 @@
+#include "display_server.hpp"
+
 #include <iostream>
-using namespace std;
 
-class DisplayServer {
+DisplayServer::DisplayServer() {
 
-public:
+    window = nullptr;
+}
 
-    void init() {
-        cout << "[DISPLAY] Server Started" << endl;
-        cout << "[DISPLAY] Screen Buffer Ready" << endl;
+bool DisplayServer::initialize(
+    const std::string& title,
+    int width,
+    int height
+) {
+
+    if (
+        SDL_Init(
+            SDL_INIT_VIDEO |
+            SDL_INIT_AUDIO
+        ) < 0
+    ) {
+
+        std::cout
+            << "[SDL] Init Failed"
+            << std::endl;
+
+        return false;
     }
 
-    void createSurface(string name) {
-        cout << "[DISPLAY] Surface Created: " << name << endl;
+    window = SDL_CreateWindow(
+        title.c_str(),
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        width,
+        height,
+        SDL_WINDOW_SHOWN
+    );
+
+    if (!window) {
+
+        std::cout
+            << "[SDL] Window Creation Failed"
+            << std::endl;
+
+        return false;
     }
-};
+
+    std::cout
+        << "[DISPLAY] Window Created"
+        << std::endl;
+
+    return true;
+}
+
+SDL_Window* DisplayServer::getWindow() {
+
+    return window;
+}
+
+void DisplayServer::shutdown() {
+
+    SDL_DestroyWindow(window);
+
+    SDL_Quit();
+
+    std::cout
+        << "[DISPLAY] Shutdown"
+        << std::endl;
+}
