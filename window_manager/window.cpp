@@ -1,25 +1,28 @@
-#include "window.h"
+#include "window.hpp"
 
 Window::Window(
-    int id,
-    std::string title,
-    int x,
-    int y,
-    int width,
-    int height
+    int windowId,
+    const std::string& windowTitle,
+    int posX,
+    int posY,
+    int w,
+    int h
 ) {
 
-    this->id = id;
+    id = windowId;
 
-    this->title = title;
+    title = windowTitle;
 
-    this->x = x;
+    x = posX;
+    y = posY;
 
-    this->y = y;
+    width = w;
+    height = h;
 
-    this->width = width;
+    focused = false;
 
-    this->height = height;
+    dragging = false;
 
-    this->focused = false;
+    dragOffsetX = 0;
+    dragOffsetY = 0;
 }
