@@ -56,6 +56,11 @@
 #include "system/lock_screen.h"
 #include "system/system_monitor.h"
 
+#include "networking/network_manager.h"
+#include "networking/wifi.h"
+#include "networking/ethernet.h"
+#include "networking/dns.h"
+
 using namespace std;
 
 int main() {
@@ -64,192 +69,156 @@ int main() {
          << endl;
 
     Boot boot;
-
     boot.start();
 
     Splash splash;
-
     splash.show();
 
     FileSystem filesystem;
-
     filesystem.checkDisks();
-
     filesystem.mount();
 
     PackageManager packages;
-
     packages.init();
-
     packages.loadPackages();
 
     ServiceManager services;
-
     services.startServices();
 
     LoginManager login;
-
     login.login();
 
     SessionManager session;
-
     session.startSession();
 
     DisplayServer display;
-
     display.init();
 
     Compositor compositor;
-
     compositor.init();
 
     Renderer renderer;
-
     renderer.init();
 
     SDLBackend sdl;
-
     sdl.init();
-
     sdl.createWindow();
 
     SurfaceManager surface;
-
     surface.createSurface();
 
     GPURenderer gpu;
-
     gpu.initGPU();
 
     Animations animations;
-
     animations.fadeIn();
 
     ThemeEngine theme;
-
     theme.loadTheme();
 
     FontRenderer fonts;
-
     fonts.loadFonts();
-
     fonts.renderText();
 
     Wallpaper wallpaper;
-
     wallpaper.load();
-
     wallpaper.render();
 
     WallpaperEngine wallpaperEngine;
-
     wallpaperEngine.loadWallpaper();
-
     wallpaperEngine.animateWallpaper();
 
     WidgetPanel panel;
-
     panel.load();
-
     panel.render();
 
     Cursor cursor;
-
-    cursor.move(
-        200,
-        150
-    );
-
+    cursor.move(200,150);
     cursor.render();
 
     InputManager input;
-
     input.init();
 
     Keyboard keyboard;
-
     keyboard.listen();
 
     Mouse mouse;
-
     mouse.track();
 
     input.pollEvents();
 
+    // NETWORK
+    NetworkManager network;
+    network.init();
+    network.connect();
+
+    WiFi wifi;
+    wifi.scan();
+    wifi.connect();
+    wifi.status();
+
+    Ethernet ethernet;
+    ethernet.detectCable();
+    ethernet.connect();
+
+    DNS dns;
+    dns.resolve();
+
+    // SYSTEM
     PowerManager power;
-
     power.init();
-
     power.batteryStatus();
 
     LockScreen lockScreen;
-
     lockScreen.unlock();
 
     SystemMonitor monitor;
-
     monitor.cpuUsage();
-
     monitor.ramUsage();
-
     monitor.gpuUsage();
 
+    // PROCESS
     ProcessManager process;
-
     process.init();
 
+    // DESKTOP
     DesktopShell desktop;
-
     desktop.load();
 
     Notifications notifications;
-
     notifications.push(
         "Welcome To Kaizor OS"
     );
 
     NotificationCenter notificationCenter;
-
     notificationCenter.open();
 
     notificationCenter.push(
-        "System Ready"
+        "Network Connected"
     );
 
     Launcher launcher;
-
     launcher.init();
-
     launcher.open();
 
     Taskbar taskbar;
-
     taskbar.init();
-
     taskbar.render();
 
     Dock dock;
-
     dock.init();
-
     dock.render();
 
     DockRuntime dockRuntime;
-
     dockRuntime.loadApps();
-
     dockRuntime.render();
 
     Workspace workspace;
-
     workspace.init();
-
     workspace.switchWorkspace(1);
 
     StartMenu startMenu;
-
     startMenu.open();
-
     startMenu.render();
 
     DesktopIcon icon1(
@@ -265,11 +234,9 @@ int main() {
     );
 
     icon1.render();
-
     icon2.render();
 
     AppLauncher launcherRuntime;
-
     launcherRuntime.launch(
         "Browser"
     );
@@ -283,11 +250,10 @@ int main() {
     );
 
     startButton.render();
-
     startButton.click();
 
+    // APPS
     FileManager files;
-
     files.open();
 
     process.startProcess(
@@ -295,7 +261,6 @@ int main() {
     );
 
     Settings settings;
-
     settings.open();
 
     process.startProcess(
@@ -303,13 +268,13 @@ int main() {
     );
 
     Terminal terminal;
-
     terminal.open();
 
     process.startProcess(
         "Terminal"
     );
 
+    // WINDOWS
     WindowManager wm;
 
     wm.createWindow(
@@ -350,6 +315,8 @@ int main() {
     sdl.eventLoop();
 
     power.shutdown();
+
+    network.disconnect();
 
     sdl.shutdown();
 
