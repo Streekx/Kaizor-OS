@@ -1,0 +1,4 @@
+PLACEHOLDER FILE
+
+Real BOOTX64.EFI will be generated during actual FreeBSD ISO build process.
+This placeholder exists to keep folder structure complete.
