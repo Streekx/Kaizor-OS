@@ -1,5 +1,7 @@
 #include "window_manager.hpp"
 
+#include "../gui/ui_theme.hpp"
+
 WindowManager::WindowManager() {
 
     focusedWindow = -1;
@@ -58,11 +60,7 @@ void WindowManager::render(
                 window.y,
                 window.width,
                 window.height,
-                Color(
-                    70,
-                    90,
-                    140
-                )
+                UITheme::focusedWindow()
             );
         }
 
@@ -73,11 +71,7 @@ void WindowManager::render(
                 window.y,
                 window.width,
                 window.height,
-                Color(
-                    55,
-                    65,
-                    90
-                )
+                UITheme::normalWindow()
             );
         }
 
@@ -87,11 +81,21 @@ void WindowManager::render(
             window.x,
             window.y,
             window.width,
-            32,
+            34,
+            UITheme::titlebar()
+        );
+
+        /* CLOSE BUTTON */
+
+        renderer.drawRect(
+            window.x + window.width - 26,
+            window.y + 8,
+            12,
+            12,
             Color(
-                35,
-                40,
-                55
+                255,
+                90,
+                90
             )
         );
     }
@@ -128,7 +132,7 @@ void WindowManager::handleEvents(
                 mouseX >= window.x &&
                 mouseX <= window.x + window.width &&
                 mouseY >= window.y &&
-                mouseY <= window.y + 32;
+                mouseY <= window.y + 34;
 
             if (inside) {
 
