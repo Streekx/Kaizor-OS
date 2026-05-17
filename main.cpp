@@ -61,6 +61,11 @@
 #include "networking/ethernet.h"
 #include "networking/dns.h"
 
+#include "audio/audio_server.h"
+#include "audio/mixer.h"
+#include "audio/sound_driver.h"
+#include "audio/media.h"
+
 using namespace std;
 
 int main() {
@@ -164,6 +169,21 @@ int main() {
     DNS dns;
     dns.resolve();
 
+    // AUDIO
+    SoundDriver soundDriver;
+    soundDriver.detect();
+    soundDriver.initialize();
+
+    AudioServer audioServer;
+    audioServer.start();
+
+    Mixer mixer;
+    mixer.load();
+    mixer.volume(80);
+
+    Media media;
+    media.play();
+
     // SYSTEM
     PowerManager power;
     power.init();
@@ -195,6 +215,10 @@ int main() {
 
     notificationCenter.push(
         "Network Connected"
+    );
+
+    notificationCenter.push(
+        "Audio Ready"
     );
 
     Launcher launcher;
@@ -313,6 +337,10 @@ int main() {
          << endl;
 
     sdl.eventLoop();
+
+    media.stop();
+
+    audioServer.stop();
 
     power.shutdown();
 
