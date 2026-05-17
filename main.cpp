@@ -4,25 +4,12 @@
 
 #include "graphics/display_server.hpp"
 #include "graphics/renderer.hpp"
-#include "graphics/compositor.hpp"
+
+#include "window_manager/window_manager.hpp"
 
 using namespace std;
 
 int main() {
-
-    cout << endl;
-
-    cout
-        << "================================="
-        << endl;
-
-    cout
-        << "      KAIZOR OS GUI START"
-        << endl;
-
-    cout
-        << "================================="
-        << endl;
 
     DisplayServer display;
 
@@ -48,15 +35,38 @@ int main() {
         return -1;
     }
 
-    Compositor compositor;
+    WindowManager wm;
+
+    wm.createWindow(
+        1,
+        "Files",
+        100,
+        100,
+        420,
+        300
+    );
+
+    wm.createWindow(
+        2,
+        "Browser",
+        340,
+        160,
+        560,
+        360
+    );
+
+    wm.createWindow(
+        3,
+        "Settings",
+        260,
+        120,
+        420,
+        280
+    );
 
     bool running = true;
 
     SDL_Event event;
-
-    cout
-        << "[KAIZOR] Desktop Started"
-        << endl;
 
     while (running) {
 
@@ -73,11 +83,13 @@ int main() {
 
                 running = false;
             }
+
+            wm.handleEvents(
+                event
+            );
         }
 
-        /* =========================
-           WALLPAPER
-           ========================= */
+        /* WALLPAPER */
 
         renderer.clear(
             Color(
@@ -87,9 +99,7 @@ int main() {
             )
         );
 
-        /* =========================
-           TASKBAR
-           ========================= */
+        /* TASKBAR */
 
         renderer.drawRect(
             0,
@@ -103,39 +113,11 @@ int main() {
             )
         );
 
-        /* =========================
-           WINDOW 1
-           ========================= */
+        /* WINDOWS */
 
-        renderer.drawRect(
-            120,
-            100,
-            420,
-            300,
-            Color(
-                55,
-                65,
-                90
-            )
+        wm.render(
+            renderer
         );
-
-        /* =========================
-           WINDOW 2
-           ========================= */
-
-        renderer.drawRect(
-            320,
-            180,
-            520,
-            340,
-            Color(
-                75,
-                85,
-                120
-            )
-        );
-
-        compositor.compose();
 
         renderer.present();
 
@@ -145,10 +127,6 @@ int main() {
     renderer.shutdown();
 
     display.shutdown();
-
-    cout
-        << "[KAIZOR] Shutdown Complete"
-        << endl;
 
     return 0;
 }
