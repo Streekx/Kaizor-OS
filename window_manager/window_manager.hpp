@@ -6,6 +6,8 @@
 
 #include "../graphics/renderer.hpp"
 
+#include "../gui/text_renderer.hpp"
+
 #include "window.hpp"
 
 class WindowManager {
@@ -30,7 +32,9 @@ public:
     );
 
     void render(
-        Renderer& renderer
+        Renderer& renderer,
+        TextRenderer& textRenderer,
+        TTF_Font* font
     );
 
     void handleEvents(
