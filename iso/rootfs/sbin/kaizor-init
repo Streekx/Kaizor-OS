@@ -1,0 +1,31 @@
+#!/bin/sh
+
+echo "=====================================" | tee -a /var/log/boot.log
+echo " KAIZOR INIT (FREEBSD DESKTOP BOOT)  " | tee -a /var/log/boot.log
+echo "=====================================" | tee -a /var/log/boot.log
+
+echo "[KAIZOR] Mounting all filesystems..." | tee -a /var/log/boot.log
+mount -a
+
+echo "[KAIZOR] Starting FreeBSD rc services..." | tee -a /var/log/boot.log
+/etc/rc
+
+echo "[KAIZOR] Creating runtime directories..." | tee -a /var/log/boot.log
+mkdir -p /var/run
+mkdir -p /var/log
+
+echo "[KAIZOR] Writing PID file..." | tee -a /var/log/boot.log
+echo $$ > /var/run/kaizor.pid
+
+echo "[KAIZOR] Starting login manager..." | tee -a /var/log/boot.log
+/usr/local/bin/kaizor-login
+
+echo "[KAIZOR] Starting desktop session..." | tee -a /var/log/boot.log
+/usr/local/bin/kaizor-session
+
+echo "[KAIZOR] Desktop running. System locked in loop." | tee -a /var/log/boot.log
+
+while true
+do
+    sleep 3
+done
