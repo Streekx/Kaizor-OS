@@ -28,6 +28,9 @@
 
 #include "core/process_manager.h"
 #include "core/session_manager.h"
+#include "core/filesystem.h"
+#include "core/package_manager.h"
+#include "core/service_manager.h"
 
 #include "themes/theme_engine.h"
 
@@ -53,6 +56,26 @@ int main() {
 
     splash.show();
 
+    // FILESYSTEM
+    FileSystem filesystem;
+
+    filesystem.checkDisks();
+
+    filesystem.mount();
+
+    // PACKAGE SYSTEM
+    PackageManager packages;
+
+    packages.init();
+
+    packages.loadPackages();
+
+    // SERVICES
+    ServiceManager services;
+
+    services.startServices();
+
+    // LOGIN
     LoginManager login;
 
     login.login();
