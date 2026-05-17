@@ -50,15 +50,121 @@ void SDLBackend::createWindow() {
 
 void SDLBackend::render() {
 
+    // WALLPAPER
     SDL_SetRenderDrawColor(
         renderer,
-        20,
         25,
-        35,
+        30,
+        45,
         255
     );
 
     SDL_RenderClear(renderer);
+
+    // TASKBAR
+    SDL_Rect taskbar = {
+        0,
+        670,
+        1280,
+        50
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        40,
+        45,
+        60,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &taskbar
+    );
+
+    // WINDOW 1
+    SDL_Rect win1 = {
+        100,
+        100,
+        400,
+        300
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        60,
+        70,
+        90,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &win1
+    );
+
+    // TITLEBAR
+    SDL_Rect title1 = {
+        100,
+        100,
+        400,
+        30
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        90,
+        110,
+        180,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &title1
+    );
+
+    // WINDOW 2
+    SDL_Rect win2 = {
+        350,
+        180,
+        500,
+        350
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        70,
+        80,
+        100,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &win2
+    );
+
+    // TITLEBAR 2
+    SDL_Rect title2 = {
+        350,
+        180,
+        500,
+        30
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        120,
+        100,
+        200,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &title2
+    );
 
     SDL_RenderPresent(renderer);
 }
