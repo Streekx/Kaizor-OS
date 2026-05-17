@@ -18,6 +18,7 @@
 #include "desktop/notifications.h"
 
 #include "window_manager/window_manager.h"
+#include "window_manager/window.h"
 #include "window_manager/taskbar.h"
 #include "window_manager/dock.h"
 #include "window_manager/workspace.h"
@@ -37,6 +38,13 @@
 #include "core/service_manager.h"
 
 #include "themes/theme_engine.h"
+
+#include "gui/start_menu.h"
+#include "gui/desktop_icon.h"
+#include "gui/app_launcher.h"
+#include "gui/button.h"
+#include "gui/titlebar.h"
+#include "gui/font_renderer.h"
 
 using namespace std;
 
@@ -104,7 +112,7 @@ int main() {
 
     renderer.init();
 
-    // SDL BACKEND
+    // SDL
     SDLBackend sdl;
 
     sdl.init();
@@ -126,10 +134,19 @@ int main() {
 
     animations.fadeIn();
 
+    animations.maximize();
+
     // THEME
     ThemeEngine theme;
 
     theme.loadTheme();
+
+    // FONT
+    FontRenderer fonts;
+
+    fonts.loadFonts();
+
+    fonts.renderText();
 
     // INPUT
     InputManager input;
@@ -146,7 +163,7 @@ int main() {
 
     input.pollEvents();
 
-    // PROCESS MANAGER
+    // PROCESS
     ProcessManager process;
 
     process.init();
@@ -191,6 +208,37 @@ int main() {
 
     workspace.switchWorkspace(1);
 
+    // START MENU
+    StartMenu startMenu;
+
+    startMenu.open();
+
+    startMenu.render();
+
+    // DESKTOP ICONS
+    DesktopIcon icon1(
+        "Browser",
+        50,
+        50
+    );
+
+    DesktopIcon icon2(
+        "Files",
+        50,
+        140
+    );
+
+    icon1.render();
+
+    icon2.render();
+
+    // APP LAUNCHER
+    AppLauncher launcherRuntime;
+
+    launcherRuntime.launch(
+        "Browser"
+    );
+
     // APPS
     FileManager files;
 
@@ -216,7 +264,7 @@ int main() {
         "Terminal"
     );
 
-    // WINDOW MANAGER
+    // WINDOWS
     WindowManager wm;
 
     wm.createWindow(
@@ -237,9 +285,15 @@ int main() {
         500
     );
 
-    wm.renderWindows();
+    wm.focusWindow(2);
 
-    animations.maximize();
+    wm.moveWindow(
+        1,
+        180,
+        160
+    );
+
+    wm.renderWindows();
 
     // COMPOSITOR
     compositor.compose();
@@ -250,7 +304,7 @@ int main() {
     cout << "[KAIZOR READY]"
          << endl;
 
-    // REAL GUI LOOP
+    // GUI LOOP
     sdl.eventLoop();
 
     // SHUTDOWN
