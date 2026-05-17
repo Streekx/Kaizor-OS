@@ -25,18 +25,21 @@ void WindowManager::createWindow(
     windows.push_back(w);
 
     cout << "[WM] Window Created: "
-         << title << endl;
+         << title
+         << endl;
 }
 
-void WindowManager::render() {
+void WindowManager::renderWindows() {
 
     cout << endl;
 
-    cout << "====== WINDOWS ======" << endl;
+    cout << "====== WINDOW RENDER ======"
+         << endl;
 
     for (auto &w : windows) {
 
-        cout << w.title
+        cout << "[DRAW] "
+             << w.title
              << " Pos("
              << w.x
              << ","
@@ -49,5 +52,6 @@ void WindowManager::render() {
              << endl;
     }
 
-    cout << "=====================" << endl;
+    cout << "==========================="
+         << endl;
 }
