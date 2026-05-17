@@ -9,6 +9,8 @@ SDL_Window* window = nullptr;
 
 SDL_Renderer* renderer = nullptr;
 
+bool running = true;
+
 bool SDLBackend::init() {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -59,9 +61,38 @@ void SDLBackend::render() {
     SDL_RenderClear(renderer);
 
     SDL_RenderPresent(renderer);
+}
 
-    cout << "[SDL] Frame Rendered"
-         << endl;
+void SDLBackend::eventLoop() {
+
+    SDL_Event event;
+
+    while (running) {
+
+        while (SDL_PollEvent(&event)) {
+
+            if (event.type == SDL_QUIT) {
+
+                running = false;
+            }
+
+            if (event.type == SDL_MOUSEMOTION) {
+
+                cout << "[MOUSE] Moving"
+                     << endl;
+            }
+
+            if (event.type == SDL_KEYDOWN) {
+
+                cout << "[KEYBOARD] Key Pressed"
+                     << endl;
+            }
+        }
+
+        render();
+
+        SDL_Delay(16);
+    }
 }
 
 void SDLBackend::shutdown() {
