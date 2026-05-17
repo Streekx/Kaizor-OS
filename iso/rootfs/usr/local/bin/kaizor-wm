@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "[WM] Kaizor Window Manager started" | tee -a /var/log/kaizor.log
+echo "[WM] Handling windows, focus, drag events (placeholder)" | tee -a /var/log/kaizor.log
+
+while true
+do
+    sleep 2
+done
