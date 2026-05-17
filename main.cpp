@@ -1,5 +1,9 @@
 #include <iostream>
 
+#include "boot/boot.h"
+#include "boot/splash.h"
+#include "boot/login_manager.h"
+
 #include "graphics/renderer.h"
 #include "graphics/display_server.h"
 #include "graphics/compositor.h"
@@ -23,6 +27,7 @@
 #include "apps/terminal/terminal.h"
 
 #include "core/process_manager.h"
+#include "core/session_manager.h"
 
 #include "themes/theme_engine.h"
 
@@ -38,6 +43,24 @@ int main() {
 
     cout << "=================================="
          << endl;
+
+    // BOOT
+    Boot boot;
+
+    boot.start();
+
+    Splash splash;
+
+    splash.show();
+
+    LoginManager login;
+
+    login.login();
+
+    // SESSION
+    SessionManager session;
+
+    session.startSession();
 
     // DISPLAY
     DisplayServer display;
