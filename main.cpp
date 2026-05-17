@@ -1,7 +1,3 @@
-// ============================================================
-// FILE: main.cpp
-// ============================================================
-
 #include <iostream>
 
 #include "graphics/renderer.h"
@@ -12,15 +8,24 @@
 
 #include "window_manager/window_manager.h"
 
+#include "input/input_manager.h"
+#include "input/keyboard.h"
+#include "input/mouse.h"
+
 using namespace std;
 
 int main() {
 
-    cout << "==================================" << endl;
-    cout << "          KAIZOR OS               " << endl;
-    cout << "==================================" << endl;
+    cout << "=================================="
+         << endl;
 
-    // DISPLAY SERVER
+    cout << "          KAIZOR OS"
+         << endl;
+
+    cout << "=================================="
+         << endl;
+
+    // DISPLAY
     DisplayServer display;
 
     display.init();
@@ -34,6 +39,21 @@ int main() {
     Renderer renderer;
 
     renderer.init();
+
+    // INPUT
+    InputManager input;
+
+    input.init();
+
+    Keyboard keyboard;
+
+    keyboard.listen();
+
+    Mouse mouse;
+
+    mouse.track();
+
+    input.pollEvents();
 
     // DESKTOP
     DesktopShell desktop;
@@ -69,10 +89,11 @@ int main() {
     // RENDERER
     renderer.drawFrame();
 
-    // DISPLAY REFRESH
+    // DISPLAY
     display.refresh();
 
-    cout << "[KAIZOR READY]" << endl;
+    cout << "[KAIZOR READY]"
+         << endl;
 
     return 0;
 }
