@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "[SESSION] Kaizor session starting..." | tee -a /var/log/kaizor.log
+
+echo "[SESSION] Starting compositor..." | tee -a /var/log/kaizor.log
+/usr/local/bin/kaizor-compositor &
+
+echo "[SESSION] Starting window manager..." | tee -a /var/log/kaizor.log
+/usr/local/bin/kaizor-wm &
+
+echo "[SESSION] Starting shell..." | tee -a /var/log/kaizor.log
+/usr/local/bin/kaizor-shell
