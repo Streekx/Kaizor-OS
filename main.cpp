@@ -1,497 +1,210 @@
 #include <iostream>
 
-#include "boot/boot.h"
-#include "boot/splash.h"
-#include "boot/login_manager.h"
+#include "boot/boot.hpp"
 
-#include "graphics/renderer.h"
-#include "graphics/display_server.h"
-#include "graphics/compositor.h"
-#include "graphics/animations.h"
+#include "core/filesystem.hpp"
+#include "core/package_manager.hpp"
+#include "core/process_manager.hpp"
+#include "core/service_manager.hpp"
 
-#include "graphics/sdl_backend.h"
-#include "graphics/surface_manager.h"
-#include "graphics/gpu_renderer.h"
+#include "graphics/display_server.hpp"
+#include "graphics/renderer.hpp"
+#include "graphics/compositor.hpp"
 
-#include "desktop/desktop_shell.h"
-#include "desktop/launcher.h"
-#include "desktop/notifications.h"
-#include "desktop/notification_center.h"
-#include "desktop/wallpaper_engine.h"
-#include "desktop/dock_runtime.h"
+#include "gui/gui_renderer.hpp"
+#include "gui/blur_engine.hpp"
+#include "gui/animation_engine.hpp"
+#include "gui/transparency.hpp"
 
-#include "window_manager/window_manager.h"
-#include "window_manager/window.h"
-#include "window_manager/taskbar.h"
-#include "window_manager/dock.h"
-#include "window_manager/workspace.h"
+#include "desktop/desktop_shell.hpp"
+#include "desktop/dock.hpp"
+#include "desktop/taskbar.hpp"
+#include "desktop/notifications.hpp"
 
-#include "input/input_manager.h"
-#include "input/keyboard.h"
-#include "input/mouse.h"
+#include "window_manager/window_manager.hpp"
+#include "window_manager/window.hpp"
 
-#include "apps/file_manager/file_manager.h"
-#include "apps/settings/settings.h"
-#include "apps/terminal/terminal.h"
+#include "input/input_manager.hpp"
+#include "input/keyboard.hpp"
+#include "input/mouse.hpp"
 
-#include "core/process_manager.h"
-#include "core/session_manager.h"
-#include "core/filesystem.h"
-#include "core/package_manager.h"
-#include "core/service_manager.h"
+#include "audio/audio_server.hpp"
+#include "audio/mixer.hpp"
+#include "audio/media.hpp"
 
-#include "themes/theme_engine.h"
+#include "networking/network_manager.hpp"
+#include "networking/wifi.hpp"
+#include "networking/ethernet.hpp"
 
-#include "gui/start_menu.h"
-#include "gui/desktop_icon.h"
-#include "gui/app_launcher.h"
-#include "gui/button.h"
-#include "gui/titlebar.h"
-#include "gui/font_renderer.h"
-#include "gui/cursor.h"
-#include "gui/wallpaper.h"
-#include "gui/widget_panel.h"
-
-#include "system/power_manager.h"
-#include "system/lock_screen.h"
-#include "system/system_monitor.h"
-
-#include "networking/network_manager.h"
-#include "networking/wifi.h"
-#include "networking/ethernet.h"
-#include "networking/dns.h"
-
-#include "audio/audio_server.h"
-#include "audio/mixer.h"
-#include "audio/sound_driver.h"
-#include "audio/media.h"
-
-#include "kernel/freebsd_bridge.h"
-#include "kernel/init_system.h"
-#include "kernel/startup.h"
-#include "kernel/hardware.h"
+#include "system/power_manager.hpp"
 
 using namespace std;
 
 int main() {
 
-    cout << "========== KAIZOR OS =========="
-         << endl;
+    cout << "======================================" << endl;
+    cout << "         KAIZOR OS STARTUP            " << endl;
+    cout << "======================================" << endl;
 
-    // HARDWARE
-    Hardware hardware;
+    /* =========================
+       BOOT
+       ========================= */
 
-    hardware.detectCPU();
-
-    hardware.detectGPU();
-
-    hardware.detectRAM();
-
-    // FREEBSD
-    FreeBSDBridge freebsd;
-
-    freebsd.detectKernel();
-
-    freebsd.mountSystem();
-
-    freebsd.startUserspace();
-
-    // INIT
-    InitSystem init;
-
-    init.loadServices();
-
-    init.startRuntime();
-
-    // STARTUP
-    Startup startup;
-
-    startup.bootSequence();
-
-    startup.loadDesktop();
-
-    // BOOT
     Boot boot;
-
     boot.start();
 
-    Splash splash;
+    /* =========================
+       CORE
+       ========================= */
 
-    splash.show();
-
-    // FILESYSTEM
     FileSystem filesystem;
-
-    filesystem.checkDisks();
-
     filesystem.mount();
 
-    // PACKAGE SYSTEM
-    PackageManager packages;
+    PackageManager pkg;
+    pkg.init();
 
-    packages.init();
-
-    packages.loadPackages();
-
-    // SERVICES
     ServiceManager services;
-
     services.startServices();
 
-    // LOGIN
-    LoginManager login;
+    ProcessManager process;
+    process.init();
 
-    login.login();
+    /* =========================
+       DISPLAY
+       ========================= */
 
-    // SESSION
-    SessionManager session;
-
-    session.startSession();
-
-    // DISPLAY
     DisplayServer display;
-
     display.init();
 
-    // COMPOSITOR
-    Compositor compositor;
-
-    compositor.init();
-
-    // RENDERER
     Renderer renderer;
-
     renderer.init();
 
-    // SDL
-    SDLBackend sdl;
+    Compositor compositor;
+    compositor.init();
 
-    sdl.init();
+    /* =========================
+       GUI
+       ========================= */
 
-    sdl.createWindow();
+    GUIRenderer gui;
+    gui.initialize();
 
-    // SURFACE
-    SurfaceManager surface;
+    BlurEngine blur;
+    blur.initialize();
 
-    surface.createSurface();
+    Transparency transparency;
+    transparency.enable();
 
-    // GPU
-    GPURenderer gpu;
+    AnimationEngine animation;
+    animation.start();
 
-    gpu.initGPU();
+    /* =========================
+       INPUT
+       ========================= */
 
-    // ANIMATION
-    Animations animations;
-
-    animations.fadeIn();
-
-    // THEME
-    ThemeEngine theme;
-
-    theme.loadTheme();
-
-    // FONT
-    FontRenderer fonts;
-
-    fonts.loadFonts();
-
-    fonts.renderText();
-
-    // WALLPAPER
-    Wallpaper wallpaper;
-
-    wallpaper.load();
-
-    wallpaper.render();
-
-    WallpaperEngine wallpaperEngine;
-
-    wallpaperEngine.loadWallpaper();
-
-    wallpaperEngine.animateWallpaper();
-
-    // WIDGETS
-    WidgetPanel panel;
-
-    panel.load();
-
-    panel.render();
-
-    // CURSOR
-    Cursor cursor;
-
-    cursor.move(200,150);
-
-    cursor.render();
-
-    // INPUT
     InputManager input;
-
     input.init();
 
     Keyboard keyboard;
-
     keyboard.listen();
 
     Mouse mouse;
-
     mouse.track();
 
-    input.pollEvents();
+    /* =========================
+       AUDIO
+       ========================= */
 
-    // NETWORK
-    NetworkManager network;
-
-    network.init();
-
-    network.connect();
-
-    WiFi wifi;
-
-    wifi.scan();
-
-    wifi.connect();
-
-    wifi.status();
-
-    Ethernet ethernet;
-
-    ethernet.detectCable();
-
-    ethernet.connect();
-
-    DNS dns;
-
-    dns.resolve();
-
-    // AUDIO
-    SoundDriver soundDriver;
-
-    soundDriver.detect();
-
-    soundDriver.initialize();
-
-    AudioServer audioServer;
-
-    audioServer.start();
+    AudioServer audio;
+    audio.start();
 
     Mixer mixer;
-
     mixer.load();
 
-    mixer.volume(80);
-
     Media media;
-
     media.play();
 
-    // SYSTEM
-    PowerManager power;
+    /* =========================
+       NETWORK
+       ========================= */
 
-    power.init();
+    NetworkManager network;
+    network.init();
 
-    power.batteryStatus();
+    WiFi wifi;
+    wifi.scan();
 
-    LockScreen lockScreen;
+    Ethernet ethernet;
+    ethernet.detectCable();
 
-    lockScreen.unlock();
+    /* =========================
+       DESKTOP
+       ========================= */
 
-    SystemMonitor monitor;
-
-    monitor.cpuUsage();
-
-    monitor.ramUsage();
-
-    monitor.gpuUsage();
-
-    // PROCESS
-    ProcessManager process;
-
-    process.init();
-
-    // DESKTOP
     DesktopShell desktop;
-
     desktop.load();
 
-    Notifications notifications;
+    Dock dock;
+    dock.init();
 
+    Taskbar taskbar;
+    taskbar.init();
+
+    Notifications notifications;
     notifications.push(
         "Welcome To Kaizor OS"
     );
 
-    NotificationCenter notificationCenter;
+    /* =========================
+       WINDOW MANAGER
+       ========================= */
 
-    notificationCenter.open();
-
-    notificationCenter.push(
-        "System Ready"
-    );
-
-    notificationCenter.push(
-        "Network Connected"
-    );
-
-    notificationCenter.push(
-        "Audio Ready"
-    );
-
-    // LAUNCHER
-    Launcher launcher;
-
-    launcher.init();
-
-    launcher.open();
-
-    // TASKBAR
-    Taskbar taskbar;
-
-    taskbar.init();
-
-    taskbar.render();
-
-    // DOCK
-    Dock dock;
-
-    dock.init();
-
-    dock.render();
-
-    DockRuntime dockRuntime;
-
-    dockRuntime.loadApps();
-
-    dockRuntime.render();
-
-    // WORKSPACE
-    Workspace workspace;
-
-    workspace.init();
-
-    workspace.switchWorkspace(1);
-
-    // START MENU
-    StartMenu startMenu;
-
-    startMenu.open();
-
-    startMenu.render();
-
-    // ICONS
-    DesktopIcon icon1(
-        "Browser",
-        50,
-        50
-    );
-
-    DesktopIcon icon2(
-        "Files",
-        50,
-        140
-    );
-
-    icon1.render();
-
-    icon2.render();
-
-    // APP LAUNCH
-    AppLauncher launcherRuntime;
-
-    launcherRuntime.launch(
-        "Browser"
-    );
-
-    // BUTTON
-    Button startButton(
-        "Start",
-        10,
-        678,
-        120,
-        34
-    );
-
-    startButton.render();
-
-    startButton.click();
-
-    // APPS
-    FileManager files;
-
-    files.open();
-
-    process.startProcess(
-        "File Manager"
-    );
-
-    Settings settings;
-
-    settings.open();
-
-    process.startProcess(
-        "Settings"
-    );
-
-    Terminal terminal;
-
-    terminal.open();
-
-    process.startProcess(
-        "Terminal"
-    );
-
-    // WINDOWS
     WindowManager wm;
 
     wm.createWindow(
         1,
         "Files",
-        150,
         120,
-        450,
+        120,
+        500,
         320
     );
 
     wm.createWindow(
         2,
         "Browser",
-        420,
+        300,
+        180,
+        700,
+        450
+    );
+
+    wm.createWindow(
+        3,
+        "Settings",
         220,
-        520,
-        360
+        150,
+        420,
+        300
     );
 
     wm.focusWindow(2);
 
-    wm.moveWindow(
-        1,
-        180,
-        150
-    );
-
     wm.renderWindows();
 
-    // COMPOSITOR
+    /* =========================
+       FINAL RENDER
+       ========================= */
+
+    renderer.drawFrame();
+
     compositor.compose();
 
-    // DISPLAY
     display.refresh();
 
-    cout << "[KAIZOR READY]"
-         << endl;
-
-    // GUI LOOP
-    sdl.eventLoop();
-
-    // SHUTDOWN
-    media.stop();
-
-    audioServer.stop();
-
-    power.shutdown();
-
-    network.disconnect();
-
-    sdl.shutdown();
+    cout << endl;
+    cout << "[KAIZOR OS READY]" << endl;
+    cout << endl;
 
     return 0;
 }
