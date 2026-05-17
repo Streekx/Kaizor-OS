@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "[KAIZOR] rc.local executed" >> /var/log/boot.log
