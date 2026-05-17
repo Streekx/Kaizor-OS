@@ -3,13 +3,16 @@
 #include "graphics/renderer.h"
 #include "graphics/display_server.h"
 #include "graphics/compositor.h"
+#include "graphics/animations.h"
 
 #include "desktop/desktop_shell.h"
 #include "desktop/launcher.h"
+#include "desktop/notifications.h"
 
 #include "window_manager/window_manager.h"
 #include "window_manager/taskbar.h"
 #include "window_manager/dock.h"
+#include "window_manager/workspace.h"
 
 #include "input/input_manager.h"
 #include "input/keyboard.h"
@@ -43,6 +46,11 @@ int main() {
 
     renderer.init();
 
+    // ANIMATIONS
+    Animations animations;
+
+    animations.fadeIn();
+
     // INPUT
     InputManager input;
 
@@ -62,6 +70,13 @@ int main() {
     DesktopShell desktop;
 
     desktop.load();
+
+    // NOTIFICATIONS
+    Notifications notifications;
+
+    notifications.push(
+        "Welcome To Kaizor OS"
+    );
 
     // LAUNCHER
     Launcher launcher;
@@ -83,6 +98,13 @@ int main() {
     dock.init();
 
     dock.render();
+
+    // WORKSPACE
+    Workspace workspace;
+
+    workspace.init();
+
+    workspace.switchWorkspace(1);
 
     // WINDOW MANAGER
     WindowManager wm;
@@ -106,6 +128,8 @@ int main() {
     );
 
     wm.render();
+
+    animations.maximize();
 
     // COMPOSITOR
     compositor.compose();
