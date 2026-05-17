@@ -1,8 +1,4 @@
-#include <iostream>
-
-#include "window_manager.h"
-
-using namespace std;
+#include "window_manager.hpp"
 
 WindowManager::WindowManager() {
 
@@ -11,95 +7,202 @@ WindowManager::WindowManager() {
 
 void WindowManager::createWindow(
     int id,
-    string title,
+    const std::string& title,
     int x,
     int y,
     int width,
     int height
 ) {
 
-    Window w(
-        id,
-        title,
-        x,
-        y,
-        width,
-        height
+    windows.push_back(
+        Window(
+            id,
+            title,
+            x,
+            y,
+            width,
+            height
+        )
     );
-
-    windows.push_back(w);
-
-    cout << "[WM] Window Created: "
-         << title
-         << endl;
 }
 
-void WindowManager::focusWindow(
-    int id
+void WindowManager::render(
+    Renderer& renderer
 ) {
 
-    focusedWindow = id;
+    for (
+        auto& window : windows
+    ) {
 
-    cout << "[WM] Focus Window: "
-         << id
-         << endl;
-}
+        /* SHADOW */
 
-void WindowManager::moveWindow(
-    int id,
-    int newX,
-    int newY
-) {
+        renderer.drawRect(
+            window.x + 8,
+            window.y + 8,
+            window.width,
+            window.height,
+            Color(
+                0,
+                0,
+                0,
+                120
+            )
+        );
 
-    for (auto &w : windows) {
+        /* WINDOW BODY */
 
-        if (w.id == id) {
+        if (window.focused) {
 
-            w.x = newX;
-
-            w.y = newY;
-
-            cout << "[WM] Moved "
-                 << w.title
-                 << " -> ("
-                 << newX
-                 << ","
-                 << newY
-                 << ")"
-                 << endl;
+            renderer.drawRect(
+                window.x,
+                window.y,
+                window.width,
+                window.height,
+                Color(
+                    70,
+                    90,
+                    140
+                )
+            );
         }
+
+        else {
+
+            renderer.drawRect(
+                window.x,
+                window.y,
+                window.width,
+                window.height,
+                Color(
+                    55,
+                    65,
+                    90
+                )
+            );
+        }
+
+        /* TITLEBAR */
+
+        renderer.drawRect(
+            window.x,
+            window.y,
+            window.width,
+            32,
+            Color(
+                35,
+                40,
+                55
+            )
+        );
     }
 }
 
-void WindowManager::renderWindows() {
+void WindowManager::handleEvents(
+    SDL_Event& event
+) {
 
-    cout << endl;
+    if (
+        event.type ==
+        SDL_MOUSEBUTTONDOWN
+    ) {
 
-    cout << "====== WINDOW RENDER ======"
-         << endl;
+        int mouseX =
+            event.button.x;
 
-    for (auto &w : windows) {
+        int mouseY =
+            event.button.y;
 
-        cout << "[DRAW] "
-             << w.title
-             << " Pos("
-             << w.x
-             << ","
-             << w.y
-             << ") Size("
-             << w.width
-             << "x"
-             << w.height
-             << ")";
+        for (
+            int i =
+            windows.size() - 1;
 
-        if (w.id == focusedWindow) {
+            i >= 0;
 
-            cout << " [FOCUSED]";
+            i--
+        ) {
+
+            Window& window =
+                windows[i];
+
+            bool inside =
+                mouseX >= window.x &&
+                mouseX <= window.x + window.width &&
+                mouseY >= window.y &&
+                mouseY <= window.y + 32;
+
+            if (inside) {
+
+                focusedWindow =
+                    i;
+
+                for (
+                    auto& w :
+                    windows
+                ) {
+
+                    w.focused = false;
+                }
+
+                window.focused =
+                    true;
+
+                window.dragging =
+                    true;
+
+                window.dragOffsetX =
+                    mouseX - window.x;
+
+                window.dragOffsetY =
+                    mouseY - window.y;
+
+                break;
+            }
         }
-
-        cout << endl;
     }
 
-    cout << "==========================="
-         << endl;
+    if (
+        event.type ==
+        SDL_MOUSEBUTTONUP
+    ) {
+
+        for (
+            auto& window :
+            windows
+        ) {
+
+            window.dragging =
+                false;
+        }
+    }
+
+    if (
+        event.type ==
+        SDL_MOUSEMOTION
+    ) {
+
+        int mouseX =
+            event.motion.x;
+
+        int mouseY =
+            event.motion.y;
+
+        for (
+            auto& window :
+            windows
+        ) {
+
+            if (
+                window.dragging
+            ) {
+
+                window.x =
+                    mouseX -
+                    window.dragOffsetX;
+
+                window.y =
+                    mouseY -
+                    window.dragOffsetY;
+            }
+        }
+    }
 }
