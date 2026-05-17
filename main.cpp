@@ -1,13 +1,13 @@
 #include <SDL2/SDL.h>
 
-#include <iostream>
-
 #include "graphics/display_server.hpp"
 #include "graphics/renderer.hpp"
 
 #include "window_manager/window_manager.hpp"
 
-using namespace std;
+#include "gui/ui_theme.hpp"
+#include "gui/taskbar.hpp"
+#include "gui/dock.hpp"
 
 int main() {
 
@@ -40,7 +40,7 @@ int main() {
     wm.createWindow(
         1,
         "Files",
-        100,
+        120,
         100,
         420,
         300
@@ -49,8 +49,8 @@ int main() {
     wm.createWindow(
         2,
         "Browser",
-        340,
-        160,
+        320,
+        180,
         560,
         360
     );
@@ -58,11 +58,15 @@ int main() {
     wm.createWindow(
         3,
         "Settings",
-        260,
-        120,
-        420,
+        240,
+        140,
+        400,
         280
     );
+
+    Taskbar taskbar;
+
+    Dock dock;
 
     bool running = true;
 
@@ -92,30 +96,24 @@ int main() {
         /* WALLPAPER */
 
         renderer.clear(
-            Color(
-                18,
-                20,
-                30
-            )
+            UITheme::wallpaper()
         );
 
         /* TASKBAR */
 
-        renderer.drawRect(
-            0,
-            670,
-            1280,
-            50,
-            Color(
-                35,
-                40,
-                55
-            )
+        taskbar.render(
+            renderer
         );
 
         /* WINDOWS */
 
         wm.render(
+            renderer
+        );
+
+        /* DOCK */
+
+        dock.render(
             renderer
         );
 
