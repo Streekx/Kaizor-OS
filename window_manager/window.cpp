@@ -14,9 +14,11 @@ Window::Window(
     this->title = title;
 
     this->x = x;
+
     this->y = y;
 
     this->width = width;
+
     this->height = height;
 
     this->focused = false;
