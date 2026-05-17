@@ -9,6 +9,10 @@
 #include "graphics/compositor.h"
 #include "graphics/animations.h"
 
+#include "graphics/sdl_backend.h"
+#include "graphics/surface_manager.h"
+#include "graphics/gpu_renderer.h"
+
 #include "desktop/desktop_shell.h"
 #include "desktop/launcher.h"
 #include "desktop/notifications.h"
@@ -99,6 +103,26 @@ int main() {
     Renderer renderer;
 
     renderer.init();
+
+    // SDL BACKEND
+    SDLBackend sdl;
+
+    sdl.init();
+
+    sdl.createWindow();
+
+    // SURFACE
+    SurfaceManager surface;
+
+    surface.createSurface();
+
+    // GPU
+    GPURenderer gpu;
+
+    gpu.initGPU();
+
+    // REAL FRAME
+    sdl.render();
 
     // ANIMATIONS
     Animations animations;
@@ -231,6 +255,9 @@ int main() {
 
     cout << "[KAIZOR READY]"
          << endl;
+
+    // SHUTDOWN
+    sdl.shutdown();
 
     return 0;
 }
