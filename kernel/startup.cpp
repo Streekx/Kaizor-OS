@@ -1,17 +1,14 @@
-#include <iostream>
-
 #include "startup.h"
+#include "console_logger.h"
 
-using namespace std;
-
-void Startup::bootSequence() {
-
-    cout << "[STARTUP] Boot Sequence"
-         << endl;
+void Startup::showBootLogo() {
+    ConsoleLogger::info("STARTUP: Kaizor Boot Logo Displayed");
 }
 
-void Startup::loadDesktop() {
+void Startup::runChecks() {
+    ConsoleLogger::info("STARTUP: Running system checks (fsck, disk scan)");
+}
 
-    cout << "[STARTUP] Desktop Runtime Loaded"
-         << endl;
+void Startup::launchDesktop() {
+    ConsoleLogger::info("STARTUP: Launching desktop compositor + shell");
 }
