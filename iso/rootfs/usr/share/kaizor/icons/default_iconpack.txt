@@ -1,0 +1,8 @@
+KAIZOR ICONPACK PLACEHOLDER
+
+Icons:
+- Files
+- Browser
+- Settings
+- Terminal
+Style: Flat minimal + neon outline
