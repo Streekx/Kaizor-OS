@@ -4,6 +4,11 @@
 
 using namespace std;
 
+WindowManager::WindowManager() {
+
+    focusedWindow = -1;
+}
+
 void WindowManager::createWindow(
     int id,
     string title,
@@ -29,6 +34,43 @@ void WindowManager::createWindow(
          << endl;
 }
 
+void WindowManager::focusWindow(
+    int id
+) {
+
+    focusedWindow = id;
+
+    cout << "[WM] Focus Window: "
+         << id
+         << endl;
+}
+
+void WindowManager::moveWindow(
+    int id,
+    int newX,
+    int newY
+) {
+
+    for (auto &w : windows) {
+
+        if (w.id == id) {
+
+            w.x = newX;
+
+            w.y = newY;
+
+            cout << "[WM] Moved "
+                 << w.title
+                 << " -> ("
+                 << newX
+                 << ","
+                 << newY
+                 << ")"
+                 << endl;
+        }
+    }
+}
+
 void WindowManager::renderWindows() {
 
     cout << endl;
@@ -48,8 +90,14 @@ void WindowManager::renderWindows() {
              << w.width
              << "x"
              << w.height
-             << ")"
-             << endl;
+             << ")";
+
+        if (w.id == focusedWindow) {
+
+            cout << " [FOCUSED]";
+        }
+
+        cout << endl;
     }
 
     cout << "==========================="
