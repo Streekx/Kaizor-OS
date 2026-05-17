@@ -1,0 +1,3 @@
+Welcome to Kaizor OS!
+
+This is a FreeBSD-based custom desktop operating system.
