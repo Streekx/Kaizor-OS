@@ -45,21 +45,17 @@
 #include "gui/button.h"
 #include "gui/titlebar.h"
 #include "gui/font_renderer.h"
+#include "gui/cursor.h"
+#include "gui/wallpaper.h"
+#include "gui/widget_panel.h"
 
 using namespace std;
 
 int main() {
 
-    cout << "=================================="
+    cout << "========== KAIZOR OS =========="
          << endl;
 
-    cout << "          KAIZOR OS"
-         << endl;
-
-    cout << "=================================="
-         << endl;
-
-    // BOOT
     Boot boot;
 
     boot.start();
@@ -68,87 +64,91 @@ int main() {
 
     splash.show();
 
-    // FILESYSTEM
     FileSystem filesystem;
 
     filesystem.checkDisks();
 
     filesystem.mount();
 
-    // PACKAGE SYSTEM
     PackageManager packages;
 
     packages.init();
 
     packages.loadPackages();
 
-    // SERVICES
     ServiceManager services;
 
     services.startServices();
 
-    // LOGIN
     LoginManager login;
 
     login.login();
 
-    // SESSION
     SessionManager session;
 
     session.startSession();
 
-    // DISPLAY
     DisplayServer display;
 
     display.init();
 
-    // COMPOSITOR
     Compositor compositor;
 
     compositor.init();
 
-    // RENDERER
     Renderer renderer;
 
     renderer.init();
 
-    // SDL
     SDLBackend sdl;
 
     sdl.init();
 
     sdl.createWindow();
 
-    // SURFACE
     SurfaceManager surface;
 
     surface.createSurface();
 
-    // GPU
     GPURenderer gpu;
 
     gpu.initGPU();
 
-    // ANIMATIONS
     Animations animations;
 
     animations.fadeIn();
 
-    animations.maximize();
-
-    // THEME
     ThemeEngine theme;
 
     theme.loadTheme();
 
-    // FONT
     FontRenderer fonts;
 
     fonts.loadFonts();
 
     fonts.renderText();
 
-    // INPUT
+    Wallpaper wallpaper;
+
+    wallpaper.load();
+
+    wallpaper.render();
+
+    WidgetPanel panel;
+
+    panel.load();
+
+    panel.render();
+
+    Cursor cursor;
+
+    cursor.move(
+        200,
+        150
+    );
+
+    cursor.render();
+
     InputManager input;
 
     input.init();
@@ -163,59 +163,50 @@ int main() {
 
     input.pollEvents();
 
-    // PROCESS
     ProcessManager process;
 
     process.init();
 
-    // DESKTOP
     DesktopShell desktop;
 
     desktop.load();
 
-    // NOTIFICATIONS
     Notifications notifications;
 
     notifications.push(
         "Welcome To Kaizor OS"
     );
 
-    // LAUNCHER
     Launcher launcher;
 
     launcher.init();
 
     launcher.open();
 
-    // TASKBAR
     Taskbar taskbar;
 
     taskbar.init();
 
     taskbar.render();
 
-    // DOCK
     Dock dock;
 
     dock.init();
 
     dock.render();
 
-    // WORKSPACE
     Workspace workspace;
 
     workspace.init();
 
     workspace.switchWorkspace(1);
 
-    // START MENU
     StartMenu startMenu;
 
     startMenu.open();
 
     startMenu.render();
 
-    // DESKTOP ICONS
     DesktopIcon icon1(
         "Browser",
         50,
@@ -232,14 +223,24 @@ int main() {
 
     icon2.render();
 
-    // APP LAUNCHER
     AppLauncher launcherRuntime;
 
     launcherRuntime.launch(
         "Browser"
     );
 
-    // APPS
+    Button startButton(
+        "Start",
+        10,
+        678,
+        120,
+        34
+    );
+
+    startButton.render();
+
+    startButton.click();
+
     FileManager files;
 
     files.open();
@@ -264,25 +265,24 @@ int main() {
         "Terminal"
     );
 
-    // WINDOWS
     WindowManager wm;
 
     wm.createWindow(
         1,
         "Files",
-        100,
-        100,
-        500,
-        400
+        150,
+        120,
+        450,
+        320
     );
 
     wm.createWindow(
         2,
         "Browser",
-        300,
-        200,
-        700,
-        500
+        420,
+        220,
+        520,
+        360
     );
 
     wm.focusWindow(2);
@@ -290,24 +290,20 @@ int main() {
     wm.moveWindow(
         1,
         180,
-        160
+        150
     );
 
     wm.renderWindows();
 
-    // COMPOSITOR
     compositor.compose();
 
-    // DISPLAY
     display.refresh();
 
     cout << "[KAIZOR READY]"
          << endl;
 
-    // GUI LOOP
     sdl.eventLoop();
 
-    // SHUTDOWN
     sdl.shutdown();
 
     return 0;
