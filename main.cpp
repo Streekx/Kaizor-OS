@@ -9,6 +9,9 @@
 #include "gui/taskbar.hpp"
 #include "gui/dock.hpp"
 
+#include "gui/font_manager.hpp"
+#include "gui/text_renderer.hpp"
+
 int main() {
 
     DisplayServer display;
@@ -34,6 +37,15 @@ int main() {
 
         return -1;
     }
+
+    FontManager fonts;
+
+    fonts.initialize(
+        "assets/fonts/Inter-Regular.ttf",
+        16
+    );
+
+    TextRenderer textRenderer;
 
     WindowManager wm;
 
@@ -93,25 +105,19 @@ int main() {
             );
         }
 
-        /* WALLPAPER */
-
         renderer.clear(
             UITheme::wallpaper()
         );
-
-        /* TASKBAR */
 
         taskbar.render(
             renderer
         );
 
-        /* WINDOWS */
-
         wm.render(
-            renderer
+            renderer,
+            textRenderer,
+            fonts.getFont()
         );
-
-        /* DOCK */
 
         dock.render(
             renderer
@@ -121,6 +127,8 @@ int main() {
 
         SDL_Delay(16);
     }
+
+    fonts.shutdown();
 
     renderer.shutdown();
 
