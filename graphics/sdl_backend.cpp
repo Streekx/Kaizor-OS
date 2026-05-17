@@ -53,9 +53,9 @@ void SDLBackend::render() {
     // WALLPAPER
     SDL_SetRenderDrawColor(
         renderer,
+        20,
         25,
-        30,
-        45,
+        40,
         255
     );
 
@@ -71,9 +71,9 @@ void SDLBackend::render() {
 
     SDL_SetRenderDrawColor(
         renderer,
+        35,
         40,
-        45,
-        60,
+        55,
         255
     );
 
@@ -84,10 +84,10 @@ void SDLBackend::render() {
 
     // WINDOW 1
     SDL_Rect win1 = {
-        100,
-        100,
-        400,
-        300
+        150,
+        120,
+        450,
+        320
     };
 
     SDL_SetRenderDrawColor(
@@ -103,19 +103,19 @@ void SDLBackend::render() {
         &win1
     );
 
-    // TITLEBAR
+    // TITLEBAR 1
     SDL_Rect title1 = {
-        100,
-        100,
-        400,
+        150,
+        120,
+        450,
         30
     };
 
     SDL_SetRenderDrawColor(
         renderer,
         90,
-        110,
-        180,
+        120,
+        200,
         255
     );
 
@@ -126,10 +126,10 @@ void SDLBackend::render() {
 
     // WINDOW 2
     SDL_Rect win2 = {
-        350,
-        180,
-        500,
-        350
+        420,
+        220,
+        520,
+        360
     };
 
     SDL_SetRenderDrawColor(
@@ -147,23 +147,44 @@ void SDLBackend::render() {
 
     // TITLEBAR 2
     SDL_Rect title2 = {
-        350,
-        180,
-        500,
+        420,
+        220,
+        520,
         30
     };
 
     SDL_SetRenderDrawColor(
         renderer,
-        120,
-        100,
-        200,
+        130,
+        90,
+        220,
         255
     );
 
     SDL_RenderFillRect(
         renderer,
         &title2
+    );
+
+    // START BUTTON
+    SDL_Rect startButton = {
+        10,
+        678,
+        120,
+        34
+    };
+
+    SDL_SetRenderDrawColor(
+        renderer,
+        80,
+        100,
+        220,
+        255
+    );
+
+    SDL_RenderFillRect(
+        renderer,
+        &startButton
     );
 
     SDL_RenderPresent(renderer);
@@ -185,6 +206,12 @@ void SDLBackend::eventLoop() {
             if (event.type == SDL_MOUSEMOTION) {
 
                 cout << "[MOUSE] Moving"
+                     << endl;
+            }
+
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+
+                cout << "[MOUSE] Click"
                      << endl;
             }
 
