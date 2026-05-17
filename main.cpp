@@ -1,210 +1,154 @@
+#include <SDL2/SDL.h>
+
 #include <iostream>
-
-#include "boot/boot.hpp"
-
-#include "core/filesystem.hpp"
-#include "core/package_manager.hpp"
-#include "core/process_manager.hpp"
-#include "core/service_manager.hpp"
 
 #include "graphics/display_server.hpp"
 #include "graphics/renderer.hpp"
 #include "graphics/compositor.hpp"
 
-#include "gui/gui_renderer.hpp"
-#include "gui/blur_engine.hpp"
-#include "gui/animation_engine.hpp"
-#include "gui/transparency.hpp"
-
-#include "desktop/desktop_shell.hpp"
-#include "desktop/dock.hpp"
-#include "desktop/taskbar.hpp"
-#include "desktop/notifications.hpp"
-
-#include "window_manager/window_manager.hpp"
-#include "window_manager/window.hpp"
-
-#include "input/input_manager.hpp"
-#include "input/keyboard.hpp"
-#include "input/mouse.hpp"
-
-#include "audio/audio_server.hpp"
-#include "audio/mixer.hpp"
-#include "audio/media.hpp"
-
-#include "networking/network_manager.hpp"
-#include "networking/wifi.hpp"
-#include "networking/ethernet.hpp"
-
-#include "system/power_manager.hpp"
-
 using namespace std;
 
 int main() {
 
-    cout << "======================================" << endl;
-    cout << "         KAIZOR OS STARTUP            " << endl;
-    cout << "======================================" << endl;
+    cout << endl;
 
-    /* =========================
-       BOOT
-       ========================= */
+    cout
+        << "================================="
+        << endl;
 
-    Boot boot;
-    boot.start();
+    cout
+        << "      KAIZOR OS GUI START"
+        << endl;
 
-    /* =========================
-       CORE
-       ========================= */
-
-    FileSystem filesystem;
-    filesystem.mount();
-
-    PackageManager pkg;
-    pkg.init();
-
-    ServiceManager services;
-    services.startServices();
-
-    ProcessManager process;
-    process.init();
-
-    /* =========================
-       DISPLAY
-       ========================= */
+    cout
+        << "================================="
+        << endl;
 
     DisplayServer display;
-    display.init();
+
+    if (
+        !display.initialize(
+            "Kaizor OS",
+            1280,
+            720
+        )
+    ) {
+
+        return -1;
+    }
 
     Renderer renderer;
-    renderer.init();
+
+    if (
+        !renderer.initialize(
+            display.getWindow()
+        )
+    ) {
+
+        return -1;
+    }
 
     Compositor compositor;
-    compositor.init();
 
-    /* =========================
-       GUI
-       ========================= */
+    bool running = true;
 
-    GUIRenderer gui;
-    gui.initialize();
+    SDL_Event event;
 
-    BlurEngine blur;
-    blur.initialize();
+    cout
+        << "[KAIZOR] Desktop Started"
+        << endl;
 
-    Transparency transparency;
-    transparency.enable();
+    while (running) {
 
-    AnimationEngine animation;
-    animation.start();
+        while (
+            SDL_PollEvent(
+                &event
+            )
+        ) {
 
-    /* =========================
-       INPUT
-       ========================= */
+            if (
+                event.type ==
+                SDL_QUIT
+            ) {
 
-    InputManager input;
-    input.init();
+                running = false;
+            }
+        }
 
-    Keyboard keyboard;
-    keyboard.listen();
+        /* =========================
+           WALLPAPER
+           ========================= */
 
-    Mouse mouse;
-    mouse.track();
+        renderer.clear(
+            Color(
+                18,
+                20,
+                30
+            )
+        );
 
-    /* =========================
-       AUDIO
-       ========================= */
+        /* =========================
+           TASKBAR
+           ========================= */
 
-    AudioServer audio;
-    audio.start();
+        renderer.drawRect(
+            0,
+            670,
+            1280,
+            50,
+            Color(
+                35,
+                40,
+                55
+            )
+        );
 
-    Mixer mixer;
-    mixer.load();
+        /* =========================
+           WINDOW 1
+           ========================= */
 
-    Media media;
-    media.play();
+        renderer.drawRect(
+            120,
+            100,
+            420,
+            300,
+            Color(
+                55,
+                65,
+                90
+            )
+        );
 
-    /* =========================
-       NETWORK
-       ========================= */
+        /* =========================
+           WINDOW 2
+           ========================= */
 
-    NetworkManager network;
-    network.init();
+        renderer.drawRect(
+            320,
+            180,
+            520,
+            340,
+            Color(
+                75,
+                85,
+                120
+            )
+        );
 
-    WiFi wifi;
-    wifi.scan();
+        compositor.compose();
 
-    Ethernet ethernet;
-    ethernet.detectCable();
+        renderer.present();
 
-    /* =========================
-       DESKTOP
-       ========================= */
+        SDL_Delay(16);
+    }
 
-    DesktopShell desktop;
-    desktop.load();
+    renderer.shutdown();
 
-    Dock dock;
-    dock.init();
+    display.shutdown();
 
-    Taskbar taskbar;
-    taskbar.init();
-
-    Notifications notifications;
-    notifications.push(
-        "Welcome To Kaizor OS"
-    );
-
-    /* =========================
-       WINDOW MANAGER
-       ========================= */
-
-    WindowManager wm;
-
-    wm.createWindow(
-        1,
-        "Files",
-        120,
-        120,
-        500,
-        320
-    );
-
-    wm.createWindow(
-        2,
-        "Browser",
-        300,
-        180,
-        700,
-        450
-    );
-
-    wm.createWindow(
-        3,
-        "Settings",
-        220,
-        150,
-        420,
-        300
-    );
-
-    wm.focusWindow(2);
-
-    wm.renderWindows();
-
-    /* =========================
-       FINAL RENDER
-       ========================= */
-
-    renderer.drawFrame();
-
-    compositor.compose();
-
-    display.refresh();
-
-    cout << endl;
-    cout << "[KAIZOR OS READY]" << endl;
-    cout << endl;
+    cout
+        << "[KAIZOR] Shutdown Complete"
+        << endl;
 
     return 0;
 }
