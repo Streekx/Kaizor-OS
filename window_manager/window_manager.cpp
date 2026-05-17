@@ -26,34 +26,53 @@ void WindowManager::createWindow(
             height
         )
     );
+
+    /* FIRST WINDOW AUTO FOCUS */
+
+    if (
+        windows.size() == 1
+    ) {
+
+        windows[0].focused = true;
+
+        focusedWindow = 0;
+    }
 }
 
 void WindowManager::render(
-    Renderer& renderer
+    Renderer& renderer,
+    TextRenderer& textRenderer,
+    TTF_Font* font
 ) {
 
     for (
         auto& window : windows
     ) {
 
-        /* SHADOW */
+        /* =========================
+           SHADOW
+           ========================= */
 
         renderer.drawRect(
-            window.x + 8,
-            window.y + 8,
+            window.x + 10,
+            window.y + 10,
             window.width,
             window.height,
             Color(
                 0,
                 0,
                 0,
-                120
+                110
             )
         );
 
-        /* WINDOW BODY */
+        /* =========================
+           WINDOW BODY
+           ========================= */
 
-        if (window.focused) {
+        if (
+            window.focused
+        ) {
 
             renderer.drawRect(
                 window.x,
@@ -75,27 +94,99 @@ void WindowManager::render(
             );
         }
 
-        /* TITLEBAR */
+        /* =========================
+           TITLEBAR
+           ========================= */
 
         renderer.drawRect(
             window.x,
             window.y,
             window.width,
-            34,
+            36,
             UITheme::titlebar()
         );
 
-        /* CLOSE BUTTON */
+        /* =========================
+           WINDOW TITLE
+           ========================= */
+
+        textRenderer.drawText(
+            renderer,
+            font,
+            window.title,
+            window.x + 14,
+            window.y + 9,
+            SDL_Color{
+                255,
+                255,
+                255,
+                255
+            }
+        );
+
+        /* =========================
+           CLOSE BUTTON
+           ========================= */
 
         renderer.drawRect(
-            window.x + window.width - 26,
-            window.y + 8,
+            window.x +
+            window.width -
+            24,
+
+            window.y +
             12,
-            12,
+
+            10,
+            10,
+
             Color(
                 255,
-                90,
+                95,
+                95
+            )
+        );
+
+        /* =========================
+           MINIMIZE BUTTON
+           ========================= */
+
+        renderer.drawRect(
+            window.x +
+            window.width -
+            44,
+
+            window.y +
+            12,
+
+            10,
+            10,
+
+            Color(
+                255,
+                220,
                 90
+            )
+        );
+
+        /* =========================
+           MAXIMIZE BUTTON
+           ========================= */
+
+        renderer.drawRect(
+            window.x +
+            window.width -
+            64,
+
+            window.y +
+            12,
+
+            10,
+            10,
+
+            Color(
+                90,
+                255,
+                120
             )
         );
     }
@@ -104,6 +195,10 @@ void WindowManager::render(
 void WindowManager::handleEvents(
     SDL_Event& event
 ) {
+
+    /* =========================
+       MOUSE PRESS
+       ========================= */
 
     if (
         event.type ==
@@ -128,41 +223,60 @@ void WindowManager::handleEvents(
             Window& window =
                 windows[i];
 
-            bool inside =
+            bool insideTitlebar =
+
                 mouseX >= window.x &&
                 mouseX <= window.x + window.width &&
+
                 mouseY >= window.y &&
-                mouseY <= window.y + 34;
+                mouseY <= window.y + 36;
 
-            if (inside) {
+            if (
+                insideTitlebar
+            ) {
 
-                focusedWindow =
-                    i;
+                /* REMOVE OLD FOCUS */
 
                 for (
                     auto& w :
                     windows
                 ) {
 
-                    w.focused = false;
+                    w.focused =
+                        false;
                 }
+
+                /* NEW FOCUS */
 
                 window.focused =
                     true;
+
+                focusedWindow =
+                    i;
+
+                /* START DRAG */
 
                 window.dragging =
                     true;
 
                 window.dragOffsetX =
-                    mouseX - window.x;
+
+                    mouseX -
+                    window.x;
 
                 window.dragOffsetY =
-                    mouseY - window.y;
+
+                    mouseY -
+                    window.y;
 
                 break;
             }
         }
     }
+
+    /* =========================
+       MOUSE RELEASE
+       ========================= */
 
     if (
         event.type ==
@@ -178,6 +292,10 @@ void WindowManager::handleEvents(
                 false;
         }
     }
+
+    /* =========================
+       MOUSE MOVE
+       ========================= */
 
     if (
         event.type ==
@@ -200,10 +318,12 @@ void WindowManager::handleEvents(
             ) {
 
                 window.x =
+
                     mouseX -
                     window.dragOffsetX;
 
                 window.y =
+
                     mouseY -
                     window.dragOffsetY;
             }
