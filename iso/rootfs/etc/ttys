@@ -1,0 +1,10 @@
+console "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv0   "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv1   "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv2   "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv3   "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv4   "/usr/libexec/getty Pc" xterm onifexists secure
+ttyv5   "/usr/libexec/getty Pc" xterm onifexists secure
+
+# Kaizor graphical boot init
+ttyv8   "/sbin/kaizor-init"     xterm onifexists secure
