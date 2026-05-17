@@ -1,22 +1,66 @@
-#pragma once
+#include "ui_theme.hpp"
 
-#include "../graphics/color.hpp"
+Color UITheme::wallpaper() {
 
-class UITheme {
+    return Color(
+        14,
+        18,
+        28
+    );
+}
 
-public:
+Color UITheme::taskbar() {
 
-    static Color wallpaper();
+    return Color(
+        28,
+        32,
+        48,
+        240
+    );
+}
 
-    static Color taskbar();
+Color UITheme::dock() {
 
-    static Color dock();
+    return Color(
+        36,
+        42,
+        64,
+        230
+    );
+}
 
-    static Color focusedWindow();
+Color UITheme::focusedWindow() {
 
-    static Color normalWindow();
+    return Color(
+        70,
+        95,
+        160
+    );
+}
 
-    static Color titlebar();
+Color UITheme::normalWindow() {
 
-    static Color accent();
-};
+    return Color(
+        52,
+        60,
+        90
+    );
+}
+
+Color UITheme::titlebar() {
+
+    return Color(
+        24,
+        28,
+        42
+    );
+}
+
+Color UITheme::accent() {
+
+    return Color(
+        90,
+        140,
+        255
+    );
+}
