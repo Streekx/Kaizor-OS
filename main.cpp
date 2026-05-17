@@ -121,9 +121,6 @@ int main() {
 
     gpu.initGPU();
 
-    // REAL FRAME
-    sdl.render();
-
     // ANIMATIONS
     Animations animations;
 
@@ -247,14 +244,14 @@ int main() {
     // COMPOSITOR
     compositor.compose();
 
-    // RENDERER
-    renderer.drawFrame();
-
     // DISPLAY
     display.refresh();
 
     cout << "[KAIZOR READY]"
          << endl;
+
+    // REAL GUI LOOP
+    sdl.eventLoop();
 
     // SHUTDOWN
     sdl.shutdown();
