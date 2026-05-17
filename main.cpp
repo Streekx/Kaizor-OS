@@ -1,30 +1,46 @@
+// ============================================================
+// FILE: main.cpp
+// ============================================================
+
 #include <iostream>
 
 #include "graphics/renderer.h"
+#include "graphics/display_server.h"
+#include "graphics/compositor.h"
 
 #include "desktop/desktop_shell.h"
 
 #include "window_manager/window_manager.h"
 
-#include "graphics/display_server.h"
-
-#include "graphics/compositor.h"
-
 using namespace std;
 
 int main() {
 
-    cout << "=========== KAIZOR OS ===========" 
-         << endl;
+    cout << "==================================" << endl;
+    cout << "          KAIZOR OS               " << endl;
+    cout << "==================================" << endl;
 
+    // DISPLAY SERVER
+    DisplayServer display;
+
+    display.init();
+
+    // COMPOSITOR
+    Compositor compositor;
+
+    compositor.init();
+
+    // RENDERER
     Renderer renderer;
 
     renderer.init();
 
+    // DESKTOP
     DesktopShell desktop;
 
     desktop.load();
 
+    // WINDOW MANAGER
     WindowManager wm;
 
     wm.createWindow(
@@ -47,10 +63,16 @@ int main() {
 
     wm.render();
 
+    // COMPOSITOR
+    compositor.compose();
+
+    // RENDERER
     renderer.drawFrame();
 
-    cout << "[KAIZOR READY]"
-         << endl;
+    // DISPLAY REFRESH
+    display.refresh();
+
+    cout << "[KAIZOR READY]" << endl;
 
     return 0;
 }
