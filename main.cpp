@@ -6,6 +6,10 @@
 
 #include "window_manager/window_manager.h"
 
+#include "graphics/display_server.h"
+
+#include "graphics/compositor.h"
+
 using namespace std;
 
 int main() {
