@@ -2,6 +2,7 @@
 #define WINDOW_MANAGER_H
 
 #include <vector>
+
 #include "window.h"
 
 class WindowManager {
@@ -21,7 +22,7 @@ public:
         int height
     );
 
-    void render();
+    void renderWindows();
 };
 
 #endif
