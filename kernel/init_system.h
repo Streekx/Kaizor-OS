@@ -2,12 +2,12 @@
 #define INIT_SYSTEM_H
 
 class InitSystem {
-
 public:
-
     void loadServices();
-
-    void startRuntime();
+    void startCoreServices();
+    void startNetworkServices();
+    void startAudioServices();
+    void startDesktopServices();
 };
 
 #endif
