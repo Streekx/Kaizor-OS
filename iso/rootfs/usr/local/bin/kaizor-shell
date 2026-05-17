@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "[SHELL] Kaizor Desktop Shell Started" | tee -a /var/log/kaizor.log
+echo "[SHELL] Loading theme + wallpaper config..." | tee -a /var/log/kaizor.log
+
+if [ -f "/usr/local/etc/kaizor.conf" ]; then
+    echo "[SHELL] Config loaded: /usr/local/etc/kaizor.conf" | tee -a /var/log/kaizor.log
+else
+    echo "[SHELL] WARNING: kaizor.conf missing!" | tee -a /var/log/kaizor.log
+fi
+
+echo "[SHELL] Desktop ready." | tee -a /var/log/kaizor.log
+
+while true
+do
+    sleep 5
+done
