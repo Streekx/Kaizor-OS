@@ -5,8 +5,11 @@
 #include "graphics/compositor.h"
 
 #include "desktop/desktop_shell.h"
+#include "desktop/launcher.h"
 
 #include "window_manager/window_manager.h"
+#include "window_manager/taskbar.h"
+#include "window_manager/dock.h"
 
 #include "input/input_manager.h"
 #include "input/keyboard.h"
@@ -59,6 +62,27 @@ int main() {
     DesktopShell desktop;
 
     desktop.load();
+
+    // LAUNCHER
+    Launcher launcher;
+
+    launcher.init();
+
+    launcher.open();
+
+    // TASKBAR
+    Taskbar taskbar;
+
+    taskbar.init();
+
+    taskbar.render();
+
+    // DOCK
+    Dock dock;
+
+    dock.init();
+
+    dock.render();
 
     // WINDOW MANAGER
     WindowManager wm;
