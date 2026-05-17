@@ -11,7 +11,11 @@ private:
 
     std::vector<Window> windows;
 
+    int focusedWindow;
+
 public:
+
+    WindowManager();
 
     void createWindow(
         int id,
@@ -20,6 +24,14 @@ public:
         int y,
         int width,
         int height
+    );
+
+    void focusWindow(int id);
+
+    void moveWindow(
+        int id,
+        int newX,
+        int newY
     );
 
     void renderWindows();
