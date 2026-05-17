@@ -1,13 +1,11 @@
 #include <iostream>
+
+#include "desktop_shell.h"
+
 using namespace std;
 
-class DesktopShell {
+void DesktopShell::load() {
 
-public:
-
-    void load() {
-        cout << "[DESKTOP] Kaizor Desktop Loaded" << endl;
-        cout << "[DESKTOP] Dock: Files | Browser | Settings" << endl;
-        cout << "[DESKTOP] Wallpaper Applied" << endl;
-    }
-};
+    cout << "[DESKTOP] Kaizor Desktop Loaded"
+         << endl;
+}
