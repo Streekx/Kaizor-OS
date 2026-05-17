@@ -16,6 +16,9 @@
 #include "desktop/desktop_shell.h"
 #include "desktop/launcher.h"
 #include "desktop/notifications.h"
+#include "desktop/notification_center.h"
+#include "desktop/wallpaper_engine.h"
+#include "desktop/dock_runtime.h"
 
 #include "window_manager/window_manager.h"
 #include "window_manager/window.h"
@@ -48,6 +51,10 @@
 #include "gui/cursor.h"
 #include "gui/wallpaper.h"
 #include "gui/widget_panel.h"
+
+#include "system/power_manager.h"
+#include "system/lock_screen.h"
+#include "system/system_monitor.h"
 
 using namespace std;
 
@@ -134,6 +141,12 @@ int main() {
 
     wallpaper.render();
 
+    WallpaperEngine wallpaperEngine;
+
+    wallpaperEngine.loadWallpaper();
+
+    wallpaperEngine.animateWallpaper();
+
     WidgetPanel panel;
 
     panel.load();
@@ -163,6 +176,24 @@ int main() {
 
     input.pollEvents();
 
+    PowerManager power;
+
+    power.init();
+
+    power.batteryStatus();
+
+    LockScreen lockScreen;
+
+    lockScreen.unlock();
+
+    SystemMonitor monitor;
+
+    monitor.cpuUsage();
+
+    monitor.ramUsage();
+
+    monitor.gpuUsage();
+
     ProcessManager process;
 
     process.init();
@@ -175,6 +206,14 @@ int main() {
 
     notifications.push(
         "Welcome To Kaizor OS"
+    );
+
+    NotificationCenter notificationCenter;
+
+    notificationCenter.open();
+
+    notificationCenter.push(
+        "System Ready"
     );
 
     Launcher launcher;
@@ -194,6 +233,12 @@ int main() {
     dock.init();
 
     dock.render();
+
+    DockRuntime dockRuntime;
+
+    dockRuntime.loadApps();
+
+    dockRuntime.render();
 
     Workspace workspace;
 
@@ -303,6 +348,8 @@ int main() {
          << endl;
 
     sdl.eventLoop();
+
+    power.shutdown();
 
     sdl.shutdown();
 
