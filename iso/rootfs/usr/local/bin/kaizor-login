@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "[LOGIN] Kaizor Login Manager Started" | tee -a /var/log/kaizor.log
+echo "[LOGIN] Auto-login enabled (temporary)" | tee -a /var/log/kaizor.log
+sleep 1
+echo "[LOGIN] Logged in as user: kaizor" | tee -a /var/log/kaizor.log
