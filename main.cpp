@@ -237,7 +237,7 @@ int main() {
         500
     );
 
-    wm.render();
+    wm.renderWindows();
 
     animations.maximize();
 
