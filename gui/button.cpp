@@ -15,9 +15,11 @@ Button::Button(
     this->label = label;
 
     this->x = x;
+
     this->y = y;
 
     this->width = width;
+
     this->height = height;
 }
 
@@ -25,7 +27,11 @@ void Button::render() {
 
     cout << "[BUTTON] "
          << label
-         << " Rendered"
+         << " Rendered At ("
+         << x
+         << ","
+         << y
+         << ")"
          << endl;
 }
 
