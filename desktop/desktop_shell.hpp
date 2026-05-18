@@ -7,7 +7,7 @@
 
 class DesktopShell {
 
-private:
+public:
 
     WallpaperEngine wallpaper;
 
