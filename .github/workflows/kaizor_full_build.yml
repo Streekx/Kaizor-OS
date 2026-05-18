@@ -1,4 +1,4 @@
-name: Kaizor OS Full Build (Guaranteed)
+name: Kaizor OS Full Build (Archive ISO Stable)
 
 on:
   workflow_dispatch:
@@ -19,16 +19,13 @@ jobs:
           sudo apt update
           sudo apt install -y g++ make cmake pkg-config \
             libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
-            wget xz-utils rsync tar
+            wget xz-utils rsync tar curl
 
       - name: Auto Fix Project (Compile Safe Mode)
         run: |
-          echo "== Removing conflicting duplicate source files =="
           rm -f gui/ui_theme.cpp || true
           rm -f window_manager/window.cpp || true
 
-          echo "== Fixing wallpaper engine source =="
-          mkdir -p desktop
           cat > desktop/wallpaper_engine.cpp <<'EOF'
           #include "wallpaper_engine.hpp"
           #include "../gui/ui_theme.hpp"
@@ -37,17 +34,13 @@ jobs:
 
           void WallpaperEngine::render(Renderer& renderer) {
               renderer.clear(UITheme::wallpaper());
-
               renderer.drawRoundedRect(0, 0, 1280, 720, 0, UITheme::wallpaper());
-
               renderer.drawRoundedRect(120, 120, 420, 300, 28, Color(60, 140, 255, 55));
               renderer.drawRoundedRect(520, 200, 520, 360, 28, Color(255, 120, 180, 45));
               renderer.drawRoundedRect(220, 460, 420, 200, 28, Color(120, 255, 220, 40));
           }
           EOF
 
-          echo "== Forcing WindowManager header stable API =="
-          mkdir -p window_manager
           cat > window_manager/window_manager.hpp <<'EOF'
           #pragma once
           #include <vector>
@@ -78,11 +71,8 @@ jobs:
           };
           EOF
 
-          echo "== Fixing main.cpp to match WindowManager render signature =="
-          if [ -f main.cpp ]; then
-            sed -i 's/wm.render(renderer, textRenderer, fontManager.getFont());/wm.render(renderer);/g' main.cpp
-            sed -i 's/wm.render(renderer,textRenderer,fontManager.getFont());/wm.render(renderer);/g' main.cpp
-          fi
+          sed -i 's/wm.render(renderer, textRenderer, fontManager.getFont());/wm.render(renderer);/g' main.cpp || true
+          sed -i 's/wm.render(renderer,textRenderer,fontManager.getFont());/wm.render(renderer);/g' main.cpp || true
 
       - name: Compile KaizorWM
         run: |
@@ -132,7 +122,6 @@ jobs:
           exec /usr/local/bin/kaizor-session
           EOF
 
-          # Fallback driver for maximum laptop compatibility
           cat > build_output/overlay/etc/X11/xorg.conf.d/00-kaizor.conf <<'EOF'
           Section "Device"
               Identifier "Card0"
@@ -140,15 +129,14 @@ jobs:
           EndSection
           EOF
 
-      - name: Download FreeBSD ISO (No 404 Guaranteed)
+      - name: Download FreeBSD 14.1 ISO (Archive Server - Stable)
         run: |
           mkdir -p build_output/freebsd_iso
           cd build_output/freebsd_iso
 
-          wget -O FreeBSD.iso.xz \
-            https://download.freebsd.org/ftp/releases/ISO-IMAGES/14.1-RELEASE/amd64/Latest/FreeBSD-14.1-RELEASE-amd64-disc1.iso.xz
+          wget -O FreeBSD.iso \
+            http://ftp-archive.freebsd.org/pub/FreeBSD-Archive/old-releases/amd64/amd64/ISO-IMAGES/14.1/FreeBSD-14.1-RELEASE-amd64-disc1.iso
 
-          unxz FreeBSD.iso.xz
           ls -lh FreeBSD.iso
 
       - name: Pack Overlay Tarball
@@ -157,7 +145,7 @@ jobs:
           tar -czf kaizor_overlay.tar.gz -C overlay .
           ls -lh kaizor_overlay.tar.gz
 
-      - name: Upload Final Build Artifacts
+      - name: Upload Final Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kaizor-final-output
