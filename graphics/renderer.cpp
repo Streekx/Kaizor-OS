@@ -1,15 +1,11 @@
 #include "renderer.hpp"
-
 #include <iostream>
 
 Renderer::Renderer() {
-
     renderer = nullptr;
 }
 
-bool Renderer::initialize(
-    SDL_Window* window
-) {
+bool Renderer::initialize(SDL_Window* window) {
 
     renderer = SDL_CreateRenderer(
         window,
@@ -18,29 +14,17 @@ bool Renderer::initialize(
     );
 
     if (!renderer) {
-
-        std::cout
-            << "[RENDERER] Failed"
-            << std::endl;
-
+        std::cout << "[RENDERER] Failed: " << SDL_GetError() << std::endl;
         return false;
     }
 
-    SDL_SetRenderDrawBlendMode(
-        renderer,
-        SDL_BLENDMODE_BLEND
-    );
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    std::cout
-        << "[RENDERER] Initialized"
-        << std::endl;
-
+    std::cout << "[RENDERER] Initialized" << std::endl;
     return true;
 }
 
-void Renderer::clear(
-    Color color
-) {
+void Renderer::clear(Color color) {
 
     SDL_SetRenderDrawColor(
         renderer,
@@ -50,25 +34,12 @@ void Renderer::clear(
         color.a
     );
 
-    SDL_RenderClear(
-        renderer
-    );
+    SDL_RenderClear(renderer);
 }
 
-void Renderer::drawRect(
-    int x,
-    int y,
-    int width,
-    int height,
-    Color color
-) {
+void Renderer::drawRect(int x, int y, int width, int height, Color color) {
 
-    SDL_Rect rect = {
-        x,
-        y,
-        width,
-        height
-    };
+    SDL_Rect rect = { x, y, width, height };
 
     SDL_SetRenderDrawColor(
         renderer,
@@ -78,10 +49,7 @@ void Renderer::drawRect(
         color.a
     );
 
-    SDL_RenderFillRect(
-        renderer,
-        &rect
-    );
+    SDL_RenderFillRect(renderer, &rect);
 }
 
 void Renderer::drawRoundedRect(
@@ -92,92 +60,42 @@ void Renderer::drawRoundedRect(
     int radius,
     Color color
 ) {
+    // Center
+    drawRect(x + radius, y, width - (radius * 2), height, color);
 
-    /* CENTER */
+    // Left
+    drawRect(x, y + radius, radius, height - (radius * 2), color);
 
-    drawRect(
-        x + radius,
-        y,
-        width - (radius * 2),
-        height,
-        color
-    );
+    // Right
+    drawRect(x + width - radius, y + radius, radius, height - (radius * 2), color);
 
-    /* LEFT */
+    // Corners (simple square approximation)
+    drawRect(x + 2, y + 2, radius, radius, color);
+    drawRect(x + width - radius - 2, y + 2, radius, radius, color);
+    drawRect(x + 2, y + height - radius - 2, radius, radius, color);
+    drawRect(x + width - radius - 2, y + height - radius - 2, radius, radius, color);
+}
 
-    drawRect(
-        x,
-        y + radius,
-        radius,
-        height - (radius * 2),
-        color
-    );
+void Renderer::drawTexture(SDL_Texture* texture, int x, int y, int width, int height) {
 
-    /* RIGHT */
+    if (!texture) return;
 
-    drawRect(
-        x + width - radius,
-        y + radius,
-        radius,
-        height - (radius * 2),
-        color
-    );
-
-    /* CORNERS */
-
-    drawRect(
-        x + 2,
-        y + 2,
-        radius,
-        radius,
-        color
-    );
-
-    drawRect(
-        x + width - radius - 2,
-        y + 2,
-        radius,
-        radius,
-        color
-    );
-
-    drawRect(
-        x + 2,
-        y + height - radius - 2,
-        radius,
-        radius,
-        color
-    );
-
-    drawRect(
-        x + width - radius - 2,
-        y + height - radius - 2,
-        radius,
-        radius,
-        color
-    );
+    SDL_Rect dst = { x, y, width, height };
+    SDL_RenderCopy(renderer, texture, nullptr, &dst);
 }
 
 void Renderer::present() {
-
-    SDL_RenderPresent(
-        renderer
-    );
+    SDL_RenderPresent(renderer);
 }
 
 SDL_Renderer* Renderer::getSDLRenderer() {
-
     return renderer;
 }
 
 void Renderer::shutdown() {
 
     if (renderer) {
-
-        SDL_DestroyRenderer(
-            renderer
-        );
-
+        SDL_DestroyRenderer(renderer);
         renderer = nullptr;
     }
 }
