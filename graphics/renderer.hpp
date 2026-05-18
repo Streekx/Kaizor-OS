@@ -30,6 +30,15 @@ public:
         Color color
     );
 
+    void drawRoundedRect(
+        int x,
+        int y,
+        int width,
+        int height,
+        int radius,
+        Color color
+    );
+
     void present();
 
     SDL_Renderer* getSDLRenderer();
