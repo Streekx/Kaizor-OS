@@ -52,32 +52,88 @@ void WallpaperEngine::render(
     Renderer& renderer
 ) {
 
-    /* fallback background */
-
     renderer.clear(
         Color(
             5,
             8,
-            20
+            18
         )
     );
 
-    if (!wallpaperTexture) {
-        return;
+    if (wallpaperTexture) {
+
+        SDL_Rect bg = {
+            0,
+            0,
+            1280,
+            720
+        };
+
+        SDL_RenderCopy(
+            renderer.getSDLRenderer(),
+            wallpaperTexture,
+            NULL,
+            &bg
+        );
     }
 
-    SDL_Rect rect = {
+    /* DARK OVERLAY */
+
+    renderer.drawRect(
         0,
         0,
         1280,
-        720
-    };
+        720,
+        Color(
+            0,
+            0,
+            0,
+            45
+        )
+    );
 
-    SDL_RenderCopy(
-        renderer.getSDLRenderer(),
-        wallpaperTexture,
-        NULL,
-        &rect
+    /* PREMIUM LIGHT BLOBS */
+
+    renderer.drawRoundedRect(
+        140,
+        120,
+        280,
+        280,
+        140,
+        Color(
+            80,
+            120,
+            255,
+            22
+        )
+    );
+
+    renderer.drawRoundedRect(
+        820,
+        180,
+        340,
+        340,
+        160,
+        Color(
+            180,
+            90,
+            255,
+            18
+        )
+    );
+
+    renderer.drawRoundedRect(
+        420,
+        460,
+        260,
+        160,
+        80,
+        Color(
+            90,
+            255,
+            220,
+            18
+        )
     );
 }
 
