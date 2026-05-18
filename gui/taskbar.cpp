@@ -1,11 +1,9 @@
 #include "taskbar.hpp"
-
 #include "ui_theme.hpp"
 
-void Taskbar::render(
-    Renderer& renderer
-) {
+void Taskbar::render(Renderer& renderer) {
 
+    // Taskbar background
     renderer.drawRect(
         0,
         0,
@@ -14,8 +12,7 @@ void Taskbar::render(
         UITheme::taskbar()
     );
 
-    /* LOGO */
-
+    // Logo
     renderer.drawRect(
         16,
         10,
@@ -24,8 +21,7 @@ void Taskbar::render(
         UITheme::accentBlue()
     );
 
-    /* STATUS */
-
+    // Status icons
     renderer.drawRect(
         1180,
         12,
@@ -47,10 +43,6 @@ void Taskbar::render(
         12,
         12,
         12,
-        Color(
-            255,
-            90,
-            90
-        )
+        Color(255, 90, 90)
     );
 }
