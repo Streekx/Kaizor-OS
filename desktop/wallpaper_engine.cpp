@@ -1,17 +1,66 @@
-#include <iostream>
+#include "wallpaper_engine.hpp"
 
-#include "wallpaper_engine.h"
+WallpaperEngine::WallpaperEngine() {
 
-using namespace std;
-
-void WallpaperEngine::loadWallpaper() {
-
-    cout << "[WALLPAPER ENGINE] Wallpaper Loaded"
-         << endl;
+    wallpaperTexture = nullptr;
 }
 
-void WallpaperEngine::animateWallpaper() {
+bool WallpaperEngine::loadWallpaper(
+    SDL_Renderer* sdlRenderer
+) {
 
-    cout << "[WALLPAPER ENGINE] Animation Running"
-         << endl;
+    SDL_Surface* surface = IMG_Load(
+        "assets/wallpapers/default.png"
+    );
+
+    if (!surface) {
+
+        return false;
+    }
+
+    wallpaperTexture = SDL_CreateTextureFromSurface(
+        sdlRenderer,
+        surface
+    );
+
+    SDL_FreeSurface(surface);
+
+    return wallpaperTexture != nullptr;
+}
+
+void WallpaperEngine::render(
+    Renderer& renderer
+) {
+
+    if (!wallpaperTexture) {
+
+        renderer.clear(
+            Color(
+                12,
+                18,
+                28
+            )
+        );
+
+        return;
+    }
+
+    SDL_RenderCopy(
+        renderer.getSDLRenderer(),
+        wallpaperTexture,
+        nullptr,
+        nullptr
+    );
+}
+
+void WallpaperEngine::destroy() {
+
+    if (wallpaperTexture) {
+
+        SDL_DestroyTexture(
+            wallpaperTexture
+        );
+
+        wallpaperTexture = nullptr;
+    }
 }
