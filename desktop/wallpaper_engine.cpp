@@ -1,67 +1,58 @@
-#include "dock.hpp"
+#include "wallpaper_engine.hpp"
+#include "../gui/ui_theme.hpp"
+#include <iostream>
 
-#include "ui_theme.hpp"
+WallpaperEngine::WallpaperEngine()
+    : wallpaperTexture(nullptr) {
+}
 
-void Dock::render(
-    Renderer& renderer
-) {
+bool WallpaperEngine::loadWallpaper(SDL_Renderer* sdlRenderer) {
 
-    int dockWidth = 430;
-    int dockHeight = 82;
+    if (wallpaperTexture != nullptr) {
+        SDL_DestroyTexture(wallpaperTexture);
+        wallpaperTexture = nullptr;
+    }
 
-    int x = (1280 - dockWidth) / 2;
-    int y = 720 - 104;
+    SDL_Surface* surface = IMG_Load("assets/wallpapers/default.png");
 
-    /* SHADOW */
+    if (!surface) {
+        std::cout << "[WALLPAPER] Failed to load wallpaper: " << IMG_GetError() << std::endl;
+        return false;
+    }
 
-    renderer.drawRoundedRect(
-        x + 8,
-        y + 8,
-        dockWidth,
-        dockHeight,
-        26,
-        UITheme::shadow()
-    );
+    wallpaperTexture = SDL_CreateTextureFromSurface(sdlRenderer, surface);
+    SDL_FreeSurface(surface);
 
-    /* BODY */
+    if (!wallpaperTexture) {
+        std::cout << "[WALLPAPER] Failed to create texture: " << SDL_GetError() << std::endl;
+        return false;
+    }
 
-    renderer.drawRoundedRect(
-        x,
-        y,
-        dockWidth,
-        dockHeight,
-        26,
-        UITheme::dock()
-    );
+    std::cout << "[WALLPAPER] Wallpaper Loaded" << std::endl;
+    return true;
+}
 
-    /* ICONS */
+void WallpaperEngine::render(Renderer& renderer) {
 
-    int iconX = x + 26;
+    // If wallpaper image loaded, draw it
+    if (wallpaperTexture != nullptr) {
+        renderer.drawTexture(wallpaperTexture, 0, 0, 1280, 720);
+        return;
+    }
 
-    for (
-        int i = 0;
-        i < 6;
-        i++
-    ) {
+    // Fallback solid background (prevents black screen)
+    renderer.clear(UITheme::wallpaper());
 
-        renderer.drawRoundedRect(
-            iconX,
-            y + 18,
-            48,
-            48,
-            16,
-            UITheme::accentBlue()
-        );
+    // Simple gradient style blocks
+    renderer.drawRoundedRect(0, 0, 1280, 720, 0, UITheme::wallpaper());
+    renderer.drawRoundedRect(120, 120, 420, 300, 28, Color(60, 140, 255, 55));
+    renderer.drawRoundedRect(520, 200, 520, 360, 28, Color(255, 120, 180, 45));
+    renderer.drawRoundedRect(220, 460, 420, 200, 28, Color(120, 255, 220, 40));
+}
 
-        renderer.drawRoundedRect(
-            iconX + 8,
-            y + 26,
-            32,
-            32,
-            10,
-            UITheme::accentCyan()
-        );
-
-        iconX += 64;
+void WallpaperEngine::destroy() {
+    if (wallpaperTexture != nullptr) {
+        SDL_DestroyTexture(wallpaperTexture);
+        wallpaperTexture = nullptr;
     }
 }
