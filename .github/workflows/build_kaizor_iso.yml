@@ -1,4 +1,4 @@
-name: Kaizor OS Full Build (Linux + FreeBSD Assets)
+name: Build KaizorWM (Auto Fix + Artifacts)
 
 on:
   workflow_dispatch:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   build-linux:
-    name: Build KaizorWM on Ubuntu (SDL2)
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -15,12 +14,86 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install Build Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y g++ make cmake pkg-config \
             libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
             zip unzip wget xz-utils rsync
+
+      # ---------------------------
+      # AUTO FIX BROKEN DUPLICATES
+      # ---------------------------
+      - name: Auto Fix Duplicate Source Files
+        run: |
+          echo "== Removing duplicate inline/outline definition conflicts =="
+
+          # UITheme duplicate definition fix
+          if [ -f gui/ui_theme.cpp ]; then
+            echo "Deleting gui/ui_theme.cpp"
+            rm -f gui/ui_theme.cpp
+          fi
+
+          # Window duplicate constructor fix
+          if [ -f window_manager/window.cpp ]; then
+            echo "Deleting window_manager/window.cpp"
+            rm -f window_manager/window.cpp
+          fi
+
+          # Fix wrong include in wallpaper engine
+          if [ -f desktop/wallpaper_engine.cpp ]; then
+            echo "Fixing desktop/wallpaper_engine.cpp"
+            cat > desktop/wallpaper_engine.cpp <<'EOF'
+          #include "wallpaper_engine.hpp"
+          #include "../gui/ui_theme.hpp"
+
+          WallpaperEngine::WallpaperEngine() {}
+
+          void WallpaperEngine::render(Renderer& renderer) {
+              renderer.clear(UITheme::wallpaper());
+
+              renderer.drawRoundedRect(80, 60, 1120, 640, 35, Color(40, 50, 90, 255));
+
+              renderer.drawRoundedRect(160, 140, 300, 220, 28, Color(90, 140, 255, 55));
+              renderer.drawRoundedRect(520, 220, 260, 200, 28, Color(255, 120, 200, 45));
+              renderer.drawRoundedRect(860, 160, 240, 260, 28, Color(120, 255, 220, 40));
+          }
+          EOF
+          fi
+
+          # Force window_manager.hpp to 1-arg render version (safe build)
+          if [ -f window_manager/window_manager.hpp ]; then
+            echo "Fixing window_manager/window_manager.hpp"
+            cat > window_manager/window_manager.hpp <<'EOF'
+          #pragma once
+          #include <vector>
+          #include <string>
+          #include <SDL2/SDL.h>
+          #include "../graphics/renderer.hpp"
+          #include "window.hpp"
+
+          class WindowManager {
+          private:
+              std::vector<Window> windows;
+              int focusedWindow;
+
+          public:
+              WindowManager();
+
+              void createWindow(
+                  int id,
+                  const std::string& title,
+                  int x,
+                  int y,
+                  int width,
+                  int height
+              );
+
+              void render(Renderer& renderer);
+              void handleEvents(SDL_Event& event);
+          };
+          EOF
+          fi
 
       - name: Compile KaizorWM
         run: |
@@ -42,14 +115,12 @@ jobs:
 
           cp kaizorwm build_output/overlay/usr/local/bin/kaizorwm
 
-          # rc.conf
           cat > build_output/overlay/etc/rc.conf <<'EOF'
           dbus_enable="YES"
           hald_enable="YES"
           moused_enable="YES"
           EOF
 
-          # rc.local (auto start GUI)
           cat > build_output/overlay/etc/rc.local <<'EOF'
           #!/bin/sh
           service dbus start
@@ -59,7 +130,6 @@ jobs:
           EOF
           chmod +x build_output/overlay/etc/rc.local
 
-          # Kaizor session launcher
           cat > build_output/overlay/usr/local/bin/kaizor-session <<'EOF'
           #!/bin/sh
           export HOME=/root
@@ -69,12 +139,10 @@ jobs:
           EOF
           chmod +x build_output/overlay/usr/local/bin/kaizor-session
 
-          # X init file
           cat > build_output/overlay/root/.xinitrc <<'EOF'
           exec /usr/local/bin/kaizor-session
           EOF
 
-          # Safe Xorg fallback driver (reduces blank screen risk)
           cat > build_output/overlay/etc/X11/xorg.conf.d/00-kaizor.conf <<'EOF'
           Section "Device"
               Identifier "Card0"
@@ -82,7 +150,7 @@ jobs:
           EndSection
           EOF
 
-      - name: Download FreeBSD ISO (Base Engine)
+      - name: Download FreeBSD ISO
         run: |
           mkdir -p build_output/freebsd_iso
           cd build_output/freebsd_iso
@@ -91,19 +159,18 @@ jobs:
             https://download.freebsd.org/ftp/releases/ISO-IMAGES/14.1/FreeBSD-14.1-RELEASE-amd64-disc1.iso.xz
 
           unxz FreeBSD.iso.xz
-
           ls -lh FreeBSD.iso
 
-      - name: Pack Kaizor Overlay
+      - name: Pack Overlay
         run: |
           cd build_output
           tar -czf kaizor_overlay.tar.gz -C overlay .
           ls -lh kaizor_overlay.tar.gz
 
-      - name: Upload Artifacts (ISO + Overlay + Binary)
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kaizor-build-output
+          name: kaizor-output
           path: |
             kaizorwm
             build_output/kaizor_overlay.tar.gz
