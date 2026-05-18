@@ -1,23 +1,36 @@
 #include "blur_engine.hpp"
 
-void BlurEngine::renderBlurLayer(
-    Renderer& renderer,
-    int x,
-    int y,
-    int width,
-    int height
+void BlurEngine::render(
+    Renderer& renderer
 ) {
 
+    /* FAKE GLASS OVERLAY */
+
     renderer.drawRect(
-        x,
-        y,
-        width,
-        height,
+        0,
+        0,
+        1280,
+        720,
         Color(
             255,
             255,
             255,
-            30
+            6
+        )
+    );
+
+    /* DARK GLASS */
+
+    renderer.drawRect(
+        0,
+        0,
+        1280,
+        720,
+        Color(
+            0,
+            0,
+            0,
+            12
         )
     );
 }
