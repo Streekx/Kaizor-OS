@@ -4,59 +4,43 @@ void DesktopIcons::render(
     Renderer& renderer
 ) {
 
-    /* FILES */
+    int x = 48;
+    int y = 90;
 
-    renderer.drawRect(
-        50,
-        90,
-        64,
-        64,
-        Color(
-            90,
-            140,
-            255
-        )
-    );
+    for (
+        int i = 0;
+        i < 4;
+        i++
+    ) {
 
-    /* BROWSER */
+        renderer.drawRoundedRect(
+            x,
+            y,
+            72,
+            72,
+            18,
+            Color(
+                40 + (i * 20),
+                120,
+                255,
+                220
+            )
+        );
 
-    renderer.drawRect(
-        50,
-        190,
-        64,
-        64,
-        Color(
-            255,
-            120,
-            90
-        )
-    );
+        renderer.drawRoundedRect(
+            x + 14,
+            y + 14,
+            44,
+            44,
+            12,
+            Color(
+                220,
+                240,
+                255,
+                140
+            )
+        );
 
-    /* TERMINAL */
-
-    renderer.drawRect(
-        50,
-        290,
-        64,
-        64,
-        Color(
-            80,
-            255,
-            120
-        )
-    );
-
-    /* SETTINGS */
-
-    renderer.drawRect(
-        50,
-        390,
-        64,
-        64,
-        Color(
-            180,
-            120,
-            255
-        )
-    );
+        y += 108;
+    }
 }
