@@ -1,0 +1,101 @@
+name: Build Kaizor OS ISO (FreeBSD)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout Kaizor-OS
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install -y qemu-system-x86 qemu-utils wget xz-utils rsync
+
+      - name: Download FreeBSD VM image
+        run: |
+          mkdir -p freebsd_vm
+          cd freebsd_vm
+          wget -O freebsd.qcow2.xz https://download.freebsd.org/ftp/releases/VM-IMAGES/14.1-RELEASE/amd64/Latest/FreeBSD-14.1-RELEASE-amd64.qcow2.xz
+          unxz freebsd.qcow2.xz
+
+      - name: Prepare share folder
+        run: |
+          mkdir -p share
+          rsync -a --exclude ".git" ./ share/Kaizor-OS
+
+      - name: Create build script for FreeBSD VM
+        run: |
+          cat > share/build.sh <<'EOF'
+          #!/bin/sh
+          set -e
+
+          echo "[VM] Mounting hostshare..."
+          mkdir -p /mnt/host
+          mount -t virtfs hostshare /mnt/host || true
+
+          echo "[VM] Installing packages..."
+          pkg update -f
+          pkg install -y llvm16 pkgconf gmake cmake \
+            xorg dbus hald sdl2 sdl2_ttf sdl2_image
+
+          echo "[VM] Copy source..."
+          rm -rf /root/Kaizor-OS
+          cp -r /mnt/host/Kaizor-OS /root/Kaizor-OS
+          cd /root/Kaizor-OS
+
+          echo "[VM] Build KaizorWM..."
+          clang++ main.cpp \
+            graphics/*.cpp \
+            gui/*.cpp \
+            desktop/*.cpp \
+            window_manager/*.cpp \
+            apps/*.cpp \
+            effects/*.cpp \
+            -I/usr/local/include \
+            -L/usr/local/lib \
+            -lSDL2 -lSDL2_ttf -lSDL2_image \
+            -o kaizorwm
+
+          echo "[VM] Creating ISO root overlay..."
+          mkdir -p /root/out_iso/usr/local/bin
+          cp kaizorwm /root/out_iso/usr/local/bin/kaizorwm
+
+          echo "[VM] Copy overlay configs..."
+          if [ -d "/root/Kaizor-OS/overlay" ]; then
+            cp -R /root/Kaizor-OS/overlay/* /root/out_iso/
+          fi
+
+          echo "[VM] Packing final Kaizor overlay tar..."
+          mkdir -p /mnt/host/output
+          tar -czf /mnt/host/output/kaizor_overlay.tar.gz -C /root/out_iso .
+
+          echo "[VM] DONE."
+          EOF
+
+          chmod +x share/build.sh
+
+      - name: Boot VM and build overlay
+        run: |
+          qemu-system-x86_64 \
+            -m 4096 \
+            -smp 2 \
+            -drive file=freebsd_vm/freebsd.qcow2,format=qcow2 \
+            -virtfs local,path=share,mount_tag=hostshare,security_model=none,id=hostshare \
+            -nographic \
+            -serial mon:stdio \
+            -net nic -net user \
+            -no-reboot
+
+      - name: Upload Kaizor overlay artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaizor-overlay
+          path: share/output/kaizor_overlay.tar.gz
