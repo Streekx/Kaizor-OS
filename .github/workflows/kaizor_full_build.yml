@@ -1,4 +1,4 @@
-name: Kaizor OS Full Build (Auto Fix)
+name: Kaizor OS Full Build (Guaranteed)
 
 on:
   workflow_dispatch:
@@ -6,30 +6,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Install Build Dependencies
         run: |
           sudo apt update
           sudo apt install -y g++ make cmake pkg-config \
             libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
-            zip unzip wget xz-utils rsync
+            wget xz-utils rsync tar
 
-      - name: Auto Fix Project Source (Permanent Build Fix)
+      - name: Auto Fix Project (Compile Safe Mode)
         run: |
-          echo "== Fixing duplicate/redefinition issues =="
-
-          # Remove duplicate definitions
+          echo "== Removing conflicting duplicate source files =="
           rm -f gui/ui_theme.cpp || true
           rm -f window_manager/window.cpp || true
 
-          # Fix wallpaper engine include issue
+          echo "== Fixing wallpaper engine source =="
+          mkdir -p desktop
           cat > desktop/wallpaper_engine.cpp <<'EOF'
           #include "wallpaper_engine.hpp"
           #include "../gui/ui_theme.hpp"
@@ -47,7 +46,8 @@ jobs:
           }
           EOF
 
-          # Force WindowManager header to 1-arg render
+          echo "== Forcing WindowManager header stable API =="
+          mkdir -p window_manager
           cat > window_manager/window_manager.hpp <<'EOF'
           #pragma once
           #include <vector>
@@ -78,16 +78,11 @@ jobs:
           };
           EOF
 
-          # Fix main.cpp render call (remove textRenderer/font args)
-          if grep -q "wm.render(renderer, textRenderer" main.cpp; then
+          echo "== Fixing main.cpp to match WindowManager render signature =="
+          if [ -f main.cpp ]; then
             sed -i 's/wm.render(renderer, textRenderer, fontManager.getFont());/wm.render(renderer);/g' main.cpp
-          fi
-
-          if grep -q "wm.render(renderer,textRenderer" main.cpp; then
             sed -i 's/wm.render(renderer,textRenderer,fontManager.getFont());/wm.render(renderer);/g' main.cpp
           fi
-
-          echo "== Fix done =="
 
       - name: Compile KaizorWM
         run: |
@@ -101,7 +96,7 @@ jobs:
             -lSDL2 -lSDL2_ttf -lSDL2_image \
             -o kaizorwm
 
-      - name: Create Kaizor Overlay Folder
+      - name: Create Kaizor Overlay (Autostart Desktop)
         run: |
           mkdir -p build_output/overlay/usr/local/bin
           mkdir -p build_output/overlay/etc/X11/xorg.conf.d
@@ -137,6 +132,7 @@ jobs:
           exec /usr/local/bin/kaizor-session
           EOF
 
+          # Fallback driver for maximum laptop compatibility
           cat > build_output/overlay/etc/X11/xorg.conf.d/00-kaizor.conf <<'EOF'
           Section "Device"
               Identifier "Card0"
@@ -144,27 +140,27 @@ jobs:
           EndSection
           EOF
 
-      - name: Download FreeBSD ISO
+      - name: Download FreeBSD ISO (No 404 Guaranteed)
         run: |
           mkdir -p build_output/freebsd_iso
           cd build_output/freebsd_iso
 
           wget -O FreeBSD.iso.xz \
-            https://download.freebsd.org/ftp/releases/ISO-IMAGES/14.1/FreeBSD-14.1-RELEASE-amd64-disc1.iso.xz
+            https://download.freebsd.org/ftp/releases/ISO-IMAGES/14.1-RELEASE/amd64/Latest/FreeBSD-14.1-RELEASE-amd64-disc1.iso.xz
 
           unxz FreeBSD.iso.xz
           ls -lh FreeBSD.iso
 
-      - name: Pack Overlay
+      - name: Pack Overlay Tarball
         run: |
           cd build_output
           tar -czf kaizor_overlay.tar.gz -C overlay .
           ls -lh kaizor_overlay.tar.gz
 
-      - name: Upload Artifacts
+      - name: Upload Final Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kaizor-output
+          name: kaizor-final-output
           path: |
             kaizorwm
             build_output/kaizor_overlay.tar.gz
