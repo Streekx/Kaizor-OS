@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "dock_runtime.hpp"
+#include "dock_runtime.h"
 
 using namespace std;
 
