@@ -1,10 +1,8 @@
 #include "window_manager.hpp"
-
 #include "../gui/ui_theme.hpp"
 
-WindowManager::WindowManager() {
-
-    focusedWindow = -1;
+WindowManager::WindowManager()
+    : focusedWindow(-1) {
 }
 
 void WindowManager::createWindow(
@@ -15,214 +13,51 @@ void WindowManager::createWindow(
     int width,
     int height
 ) {
+    windows.emplace_back(id, title, x, y, width, height);
 
-    windows.push_back(
-        Window(
-            id,
-            title,
-            x,
-            y,
-            width,
-            height
-        )
-    );
-
-    if (
-        windows.size() == 1
-    ) {
-
-        windows[0].focused = true;
-
-        focusedWindow = 0;
-    }
+    // Auto focus newest window
+    focusedWindow = (int)windows.size() - 1;
 }
 
-void WindowManager::render(
-    Renderer& renderer
-) {
+void WindowManager::handleEvents(SDL_Event& event) {
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
+        int mx = event.button.x;
+        int my = event.button.y;
 
-    for (
-        auto& window : windows
-    ) {
-
-        /* SHADOW */
-
-        renderer.drawRect(
-            window.x + 10,
-            window.y + 10,
-            window.width,
-            window.height,
-            UITheme::shadow()
-        );
-
-        /* BODY */
-
-        renderer.drawRect(
-            window.x,
-            window.y,
-            window.width,
-            window.height,
-            window.focused
-                ? UITheme::focusedWindow()
-                : UITheme::normalWindow()
-        );
-
-        /* TITLEBAR */
-
-        renderer.drawRect(
-            window.x,
-            window.y,
-            window.width,
-            42,
-            UITheme::titlebar()
-        );
-
-        /* CONTROL BUTTONS */
-
-        renderer.drawRect(
-            window.x + window.width - 28,
-            window.y + 14,
-            10,
-            10,
-            Color(255,90,90)
-        );
-
-        renderer.drawRect(
-            window.x + window.width - 48,
-            window.y + 14,
-            10,
-            10,
-            Color(255,220,90)
-        );
-
-        renderer.drawRect(
-            window.x + window.width - 68,
-            window.y + 14,
-            10,
-            10,
-            Color(90,255,120)
-        );
-
-        /* CONTENT AREA */
-
-        renderer.drawRect(
-            window.x + 24,
-            window.y + 74,
-            window.width - 48,
-            window.height - 110,
-            Color(
-                60,
-                80,
-                160,
-                90
-            )
-        );
-    }
-}
-
-void WindowManager::handleEvents(
-    SDL_Event& event
-) {
-
-    if (
-        event.type ==
-        SDL_MOUSEBUTTONDOWN
-    ) {
-
-        int mouseX =
-            event.button.x;
-
-        int mouseY =
-            event.button.y;
-
-        for (
-            int i = windows.size() - 1;
-            i >= 0;
-            i--
-        ) {
-
-            Window& window =
-                windows[i];
-
-            bool insideTitlebar =
-
-                mouseX >= window.x &&
-                mouseX <= window.x + window.width &&
-
-                mouseY >= window.y &&
-                mouseY <= window.y + 42;
-
-            if (
-                insideTitlebar
-            ) {
-
-                for (
-                    auto& w :
-                    windows
-                ) {
-
-                    w.focused = false;
-                }
-
-                window.focused = true;
-
+        // focus top-most clicked window
+        for (int i = (int)windows.size() - 1; i >= 0; i--) {
+            if (windows[i].contains(mx, my)) {
                 focusedWindow = i;
-
-                window.dragging = true;
-
-                window.dragOffsetX =
-                    mouseX - window.x;
-
-                window.dragOffsetY =
-                    mouseY - window.y;
-
                 break;
             }
         }
     }
+}
 
-    if (
-        event.type ==
-        SDL_MOUSEBUTTONUP
-    ) {
+void WindowManager::render(
+    Renderer& renderer,
+    TextRenderer& textRenderer,
+    TTF_Font* font
+) {
+    for (int i = 0; i < (int)windows.size(); i++) {
 
-        for (
-            auto& window :
-            windows
-        ) {
+        bool isFocused = (i == focusedWindow);
 
-            window.dragging = false;
-        }
-    }
+        Color bg = isFocused ? UITheme::focusedWindow()
+                             : UITheme::normalWindow();
 
-    if (
-        event.type ==
-        SDL_MOUSEMOTION
-    ) {
+        windows[i].render(renderer, bg);
 
-        int mouseX =
-            event.motion.x;
-
-        int mouseY =
-            event.motion.y;
-
-        for (
-            auto& window :
-            windows
-        ) {
-
-            if (
-                window.dragging
-            ) {
-
-                window.x =
-                    mouseX -
-                    window.dragOffsetX;
-
-                window.y =
-                    mouseY -
-                    window.dragOffsetY;
-            }
+        // Draw title text (safe)
+        if (font != nullptr) {
+            textRenderer.drawText(
+                renderer,
+                font,
+                windows[i].getTitle(),
+                windows[i].getX() + 14,
+                windows[i].getY() + 10,
+                Color(255, 255, 255, 240)
+            );
         }
     }
 }
