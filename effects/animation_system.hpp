@@ -4,7 +4,7 @@ class AnimationSystem {
 
 private:
 
-    float animationTime;
+    float animationValue;
 
 public:
 
@@ -12,5 +12,5 @@ public:
 
     void update();
 
-    float getAnimationTime();
+    float value();
 };
