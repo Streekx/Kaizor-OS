@@ -1,11 +1,17 @@
-#include <iostream>
-
 #include "desktop_shell.hpp"
 
-using namespace std;
+DesktopShell::DesktopShell() {
+}
 
-void DesktopShell::load() {
+void DesktopShell::render(
+    Renderer& renderer
+) {
 
-    cout << "[DESKTOP] Kaizor Desktop Loaded"
-         << endl;
+    wallpaper.render(
+        renderer
+    );
+
+    icons.render(
+        renderer
+    );
 }
