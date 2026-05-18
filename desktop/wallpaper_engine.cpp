@@ -1,66 +1,67 @@
-#include "wallpaper_engine.hpp"
+#include "dock.hpp"
 
-WallpaperEngine::WallpaperEngine() {
+#include "ui_theme.hpp"
 
-    wallpaperTexture = nullptr;
-}
-
-bool WallpaperEngine::loadWallpaper(
-    SDL_Renderer* sdlRenderer
-) {
-
-    SDL_Surface* surface = IMG_Load(
-        "assets/wallpapers/default.png"
-    );
-
-    if (!surface) {
-
-        return false;
-    }
-
-    wallpaperTexture = SDL_CreateTextureFromSurface(
-        sdlRenderer,
-        surface
-    );
-
-    SDL_FreeSurface(surface);
-
-    return wallpaperTexture != nullptr;
-}
-
-void WallpaperEngine::render(
+void Dock::render(
     Renderer& renderer
 ) {
 
-    if (!wallpaperTexture) {
+    int dockWidth = 430;
+    int dockHeight = 82;
 
-        renderer.clear(
-            Color(
-                12,
-                18,
-                28
-            )
-        );
+    int x = (1280 - dockWidth) / 2;
+    int y = 720 - 104;
 
-        return;
-    }
+    /* SHADOW */
 
-    SDL_RenderCopy(
-        renderer.getSDLRenderer(),
-        wallpaperTexture,
-        nullptr,
-        nullptr
+    renderer.drawRoundedRect(
+        x + 8,
+        y + 8,
+        dockWidth,
+        dockHeight,
+        26,
+        UITheme::shadow()
     );
-}
 
-void WallpaperEngine::destroy() {
+    /* BODY */
 
-    if (wallpaperTexture) {
+    renderer.drawRoundedRect(
+        x,
+        y,
+        dockWidth,
+        dockHeight,
+        26,
+        UITheme::dock()
+    );
 
-        SDL_DestroyTexture(
-            wallpaperTexture
+    /* ICONS */
+
+    int iconX = x + 26;
+
+    for (
+        int i = 0;
+        i < 6;
+        i++
+    ) {
+
+        renderer.drawRoundedRect(
+            iconX,
+            y + 18,
+            48,
+            48,
+            16,
+            UITheme::accentBlue()
         );
 
-        wallpaperTexture = nullptr;
+        renderer.drawRoundedRect(
+            iconX + 8,
+            y + 26,
+            32,
+            32,
+            10,
+            UITheme::accentCyan()
+        );
+
+        iconX += 64;
     }
 }
