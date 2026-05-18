@@ -13,7 +13,7 @@ bool WallpaperEngine::loadWallpaper(SDL_Renderer* sdlRenderer) {
         wallpaperTexture = nullptr;
     }
 
-    SDL_Surface* surface = IMG_Load("assets/wallpapers/default.png");
+    SDL_Surface* surface = IMG_Load("assets/wallpapers/default_wallpaper_kaizor.png");
 
     if (!surface) {
         std::cout << "[WALLPAPER] Failed to load wallpaper: " << IMG_GetError() << std::endl;
