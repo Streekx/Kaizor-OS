@@ -1,13 +1,12 @@
-#ifndef NOTIFICATION_CENTER_H
-#define NOTIFICATION_CENTER_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
 
 class NotificationCenter {
 
 public:
 
-    void open();
-
-    void push(const char* text);
+    void render(
+        Renderer& renderer
+    );
 };
-
-#endif
