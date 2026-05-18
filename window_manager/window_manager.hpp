@@ -1,37 +1,41 @@
 #pragma once
 
-#include <vector>
 #include <string>
-
-#include <SDL2/SDL.h>
-
 #include "../graphics/renderer.hpp"
-#include "../gui/text_renderer.hpp"
+#include "../graphics/color.hpp"
 
-#include "window.hpp"
-
-class WindowManager {
+class Window {
 private:
-    std::vector<Window> windows;
-    int focusedWindow;
+    int id;
+    std::string title;
+
+    int x;
+    int y;
+    int width;
+    int height;
+
+    bool focused;
 
 public:
-    WindowManager();
-
-    void createWindow(
-        int id,
-        const std::string& title,
-        int x,
-        int y,
-        int width,
-        int height
+    Window(
+        int winId,
+        const std::string& winTitle,
+        int posX,
+        int posY,
+        int w,
+        int h
     );
 
-    void render(
-        Renderer& renderer,
-        TextRenderer& textRenderer,
-        TTF_Font* font
-    );
+    bool contains(int mx, int my) const;
 
-    void handleEvents(SDL_Event& event);
+    void setFocused(bool value);
+
+    void render(Renderer& renderer, const Color& bg);
+
+    // Getters
+    int getX() const;
+    int getY() const;
+    int getWidth() const;
+    int getHeight() const;
+    const std::string& getTitle() const;
 };
