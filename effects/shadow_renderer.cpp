@@ -1,4 +1,4 @@
-#include "shadow_renderer.h"
+#include "shadow_renderer.hpp"
 
 void ShadowRenderer::render(
     Renderer& renderer,
