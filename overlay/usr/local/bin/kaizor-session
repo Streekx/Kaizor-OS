@@ -1,0 +1,5 @@
+#!/bin/sh
+export HOME=/root
+export LANG=en_US.UTF-8
+export SDL_VIDEODRIVER=x11
+exec /usr/local/bin/kaizorwm
