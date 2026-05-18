@@ -1,18 +1,31 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "graphics/display_server.hpp"
 #include "graphics/renderer.hpp"
 
+#include "desktop/desktop_shell.hpp"
+
 #include "window_manager/window_manager.hpp"
 
-#include "gui/ui_theme.hpp"
 #include "gui/taskbar.hpp"
 #include "gui/dock.hpp"
 
-#include "gui/font_manager.hpp"
-#include "gui/text_renderer.hpp"
-
 int main() {
+
+    if (
+        SDL_Init(SDL_INIT_VIDEO) != 0
+    ) {
+
+        return -1;
+    }
+
+    if (
+        !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
+    ) {
+
+        return -1;
+    }
 
     DisplayServer display;
 
@@ -38,14 +51,7 @@ int main() {
         return -1;
     }
 
-    FontManager fonts;
-
-    fonts.initialize(
-        "assets/fonts/Inter-Regular.ttf",
-        16
-    );
-
-    TextRenderer textRenderer;
+    DesktopShell desktop;
 
     WindowManager wm;
 
@@ -61,19 +67,10 @@ int main() {
     wm.createWindow(
         2,
         "Browser",
-        320,
+        340,
         180,
         560,
         360
-    );
-
-    wm.createWindow(
-        3,
-        "Settings",
-        240,
-        140,
-        400,
-        280
     );
 
     Taskbar taskbar;
@@ -87,9 +84,7 @@ int main() {
     while (running) {
 
         while (
-            SDL_PollEvent(
-                &event
-            )
+            SDL_PollEvent(&event)
         ) {
 
             if (
@@ -105,34 +100,56 @@ int main() {
             );
         }
 
-        renderer.clear(
-            UITheme::wallpaper()
+        /* CLEAR SCREEN */
+
+        SDL_SetRenderDrawColor(
+            renderer.getSDLRenderer(),
+            10,
+            14,
+            24,
+            255
         );
+
+        SDL_RenderClear(
+            renderer.getSDLRenderer()
+        );
+
+        /* RENDER DESKTOP */
+
+        desktop.render(
+            renderer
+        );
+
+        /* WINDOWS */
+
+        wm.render(
+            renderer
+        );
+
+        /* TASKBAR */
 
         taskbar.render(
             renderer
         );
 
-        wm.render(
-            renderer,
-            textRenderer,
-            fonts.getFont()
-        );
+        /* DOCK */
 
         dock.render(
             renderer
         );
 
-        renderer.present();
+        /* PRESENT */
+
+        SDL_RenderPresent(
+            renderer.getSDLRenderer()
+        );
 
         SDL_Delay(16);
     }
 
-    fonts.shutdown();
+    IMG_Quit();
 
-    renderer.shutdown();
-
-    display.shutdown();
+    SDL_Quit();
 
     return 0;
 }
