@@ -26,6 +26,11 @@ bool Renderer::initialize(
         return false;
     }
 
+    SDL_SetRenderDrawBlendMode(
+        renderer,
+        SDL_BLENDMODE_BLEND
+    );
+
     std::cout
         << "[RENDERER] Initialized"
         << std::endl;
@@ -45,7 +50,9 @@ void Renderer::clear(
         color.a
     );
 
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(
+        renderer
+    );
 }
 
 void Renderer::drawRect(
@@ -57,7 +64,6 @@ void Renderer::drawRect(
 ) {
 
     SDL_Rect rect = {
-
         x,
         y,
         width,
@@ -78,9 +84,85 @@ void Renderer::drawRect(
     );
 }
 
+void Renderer::drawRoundedRect(
+    int x,
+    int y,
+    int width,
+    int height,
+    int radius,
+    Color color
+) {
+
+    /* CENTER */
+
+    drawRect(
+        x + radius,
+        y,
+        width - (radius * 2),
+        height,
+        color
+    );
+
+    /* LEFT */
+
+    drawRect(
+        x,
+        y + radius,
+        radius,
+        height - (radius * 2),
+        color
+    );
+
+    /* RIGHT */
+
+    drawRect(
+        x + width - radius,
+        y + radius,
+        radius,
+        height - (radius * 2),
+        color
+    );
+
+    /* CORNERS */
+
+    drawRect(
+        x + 2,
+        y + 2,
+        radius,
+        radius,
+        color
+    );
+
+    drawRect(
+        x + width - radius - 2,
+        y + 2,
+        radius,
+        radius,
+        color
+    );
+
+    drawRect(
+        x + 2,
+        y + height - radius - 2,
+        radius,
+        radius,
+        color
+    );
+
+    drawRect(
+        x + width - radius - 2,
+        y + height - radius - 2,
+        radius,
+        radius,
+        color
+    );
+}
+
 void Renderer::present() {
 
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(
+        renderer
+    );
 }
 
 SDL_Renderer* Renderer::getSDLRenderer() {
@@ -90,9 +172,12 @@ SDL_Renderer* Renderer::getSDLRenderer() {
 
 void Renderer::shutdown() {
 
-    SDL_DestroyRenderer(renderer);
+    if (renderer) {
 
-    std::cout
-        << "[RENDERER] Shutdown"
-        << std::endl;
+        SDL_DestroyRenderer(
+            renderer
+        );
+
+        renderer = nullptr;
+    }
 }
