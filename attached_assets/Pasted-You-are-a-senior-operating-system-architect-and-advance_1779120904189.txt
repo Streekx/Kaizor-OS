@@ -1,0 +1,235 @@
+You are a senior operating-system architect and advanced C++ desktop-environment engineer.
+
+Project Name:
+Kaizor OS
+
+Repository already contains:
+- FreeBSD-oriented OS architecture
+- custom desktop shell
+- window manager
+- graphics renderer
+- compositor
+- boot system
+- GUI modules
+- apps
+- ISO pipeline
+- desktop environment structure
+
+Your task is NOT to create a toy demo.
+Your task is to transform this repository into a REAL modern desktop operating system environment with professional architecture and polished GUI.
+
+IMPORTANT RULES:
+
+1. DO NOT destroy or simplify the repository structure.
+2. DO NOT convert everything into a single-file demo.
+3. KEEP the existing modular architecture.
+4. Every subsystem must remain separated professionally.
+5. Maintain clean scalable OS-level architecture.
+6. Use production-style C++ design.
+7. No placeholder rectangles-only fake UI.
+8. Build a real desktop environment feel similar to:
+   - macOS
+   - KDE Plasma
+   - modern Linux desktop systems
+9. Preserve FreeBSD compatibility direction.
+10. Never remove existing folders unless absolutely necessary.
+
+==================================================
+PRIMARY OBJECTIVES
+==================================================
+
+Transform Kaizor OS into:
+
+- visually modern
+- usable
+- scalable
+- composited
+- modular
+- animated
+- professional desktop environment
+
+==================================================
+GUI REQUIREMENTS
+==================================================
+
+Implement or improve:
+
+- modern wallpaper rendering
+- SVG/PNG icon engine
+- GPU accelerated rendering where possible
+- blur/transparency system
+- shadows
+- gradients
+- rounded corners
+- real titlebars
+- proper spacing
+- typography system
+- animations
+- hover states
+- taskbar
+- dock
+- launcher
+- notification center
+- lock screen
+- login screen
+- splash boot animation
+- widgets
+- desktop icons
+- window resize/move/minimize/maximize
+- z-index layering
+- focus system
+- transitions
+- modern color theme engine
+
+==================================================
+WINDOW SYSTEM
+==================================================
+
+Upgrade current window manager into:
+
+- composited window manager
+- draggable windows
+- resizable windows
+- focus management
+- active/inactive effects
+- shadows
+- layered rendering
+- texture-based rendering
+- event propagation system
+
+==================================================
+GRAPHICS STACK
+==================================================
+
+Current SDL rectangle rendering is too primitive.
+
+Upgrade rendering architecture using:
+
+- SDL2 textures
+- image assets
+- SVG support if possible
+- texture caching
+- proper font rasterization
+- hardware acceleration where possible
+- compositing pipeline
+- render layers
+
+Do NOT rely only on drawRect() for UI.
+
+==================================================
+ASSET SYSTEM
+==================================================
+
+Create proper asset handling for:
+
+- wallpapers
+- fonts
+- SVG icons
+- PNG icons
+- themes
+- animations
+
+Implement dynamic loading systems.
+
+==================================================
+THEME ENGINE
+==================================================
+
+Create real theme engine support:
+
+- dark mode
+- light mode
+- accent colors
+- gradients
+- blur levels
+- transparency settings
+- configurable themes
+
+==================================================
+APPS
+==================================================
+
+Upgrade built-in apps:
+
+- terminal
+- settings
+- file manager
+- browser placeholder
+
+Apps must render like real desktop applications.
+
+==================================================
+BOOT EXPERIENCE
+==================================================
+
+Implement:
+
+- splash screen
+- animated startup
+- login manager
+- lock screen
+- desktop session startup
+
+==================================================
+FREEBSD INTEGRATION
+==================================================
+
+Preserve and improve:
+
+- FreeBSD boot compatibility
+- overlay system
+- rootfs structure
+- ISO generation scripts
+- BIOS + UEFI support
+
+==================================================
+CODE QUALITY
+==================================================
+
+Requirements:
+
+- clean C++
+- modular architecture
+- reusable components
+- proper headers
+- scalable design
+- avoid duplicate code
+- avoid fake placeholder logic
+- production-like structure
+
+==================================================
+IMPORTANT DEVELOPMENT STRATEGY
+==================================================
+
+DO NOT:
+- generate fake screenshots
+- generate pseudo-code only
+- leave TODO placeholders everywhere
+- replace architecture with toy examples
+
+INSTEAD:
+- actually implement systems
+- improve existing files
+- create missing files professionally
+- connect all modules together
+
+==================================================
+FINAL GOAL
+==================================================
+
+The final result should feel like:
+
+“A real modern desktop operating system environment”
+instead of a primitive SDL prototype.
+
+Start by:
+1. analyzing the repository structure
+2. identifying broken/incomplete systems
+3. upgrading rendering architecture
+4. improving GUI quality
+5. integrating assets/themes/icons
+6. improving compositor/window manager
+7. polishing desktop shell
+8. improving ISO/build pipeline
+
+Always preserve professional OS architecture.

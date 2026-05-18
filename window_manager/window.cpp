@@ -27,10 +27,10 @@ void Window::setFocused(bool value) {
 }
 
 void Window::render(Renderer& renderer, const Color& bg) {
-    renderer.fillRect(x, y, width, height, bg);
+    renderer.drawRect(x, y, width, height, bg);
 
     // Titlebar
-    renderer.fillRect(x, y, width, 32, Color(18, 22, 42, 255));
+    renderer.drawRect(x, y, width, 32, Color(18, 22, 42, 255));
 
     // Border (simple)
     renderer.drawRect(x, y, width, height, Color(0, 0, 0, 120));
