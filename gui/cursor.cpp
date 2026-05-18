@@ -1,35 +1,36 @@
-#include <iostream>
-
 #include "cursor.h"
 
-using namespace std;
-
-Cursor::Cursor() {
-
-    x = 0;
-
-    y = 0;
-}
-
-void Cursor::move(
-    int newX,
-    int newY
+void Cursor::render(
+    Renderer& renderer,
+    int x,
+    int y
 ) {
 
-    x = newX;
+    renderer.drawRoundedRect(
+        x,
+        y,
+        16,
+        22,
+        6,
+        Color(
+            255,
+            255,
+            255,
+            255
+        )
+    );
 
-    y = newY;
-
-    cout << "[CURSOR] Move -> ("
-         << x
-         << ","
-         << y
-         << ")"
-         << endl;
-}
-
-void Cursor::render() {
-
-    cout << "[CURSOR] Rendered"
-         << endl;
+    renderer.drawRoundedRect(
+        x + 3,
+        y + 3,
+        10,
+        16,
+        4,
+        Color(
+            40,
+            40,
+            40,
+            255
+        )
+    );
 }
