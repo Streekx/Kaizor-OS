@@ -1,5 +1,5 @@
-#ifndef DESKTOP_SHELL_H
-#define DESKTOP_SHELL_H
+#ifndef DESKTOP_SHELL_HPP
+#define DESKTOP_SHELL_HPP
 
 class DesktopShell {
 
