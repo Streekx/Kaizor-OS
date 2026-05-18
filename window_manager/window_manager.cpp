@@ -27,8 +27,6 @@ void WindowManager::createWindow(
         )
     );
 
-    /* FIRST WINDOW AUTO FOCUS */
-
     if (
         windows.size() == 1
     ) {
@@ -40,153 +38,83 @@ void WindowManager::createWindow(
 }
 
 void WindowManager::render(
-    Renderer& renderer,
-    TextRenderer& textRenderer,
-    TTF_Font* font
+    Renderer& renderer
 ) {
 
     for (
         auto& window : windows
     ) {
 
-        /* =========================
-           SHADOW
-           ========================= */
+        /* SHADOW */
 
         renderer.drawRect(
             window.x + 10,
             window.y + 10,
             window.width,
             window.height,
-            Color(
-                0,
-                0,
-                0,
-                110
-            )
+            UITheme::shadow()
         );
 
-        /* =========================
-           WINDOW BODY
-           ========================= */
-
-        if (
-            window.focused
-        ) {
-
-            renderer.drawRect(
-                window.x,
-                window.y,
-                window.width,
-                window.height,
-                UITheme::focusedWindow()
-            );
-        }
-
-        else {
-
-            renderer.drawRect(
-                window.x,
-                window.y,
-                window.width,
-                window.height,
-                UITheme::normalWindow()
-            );
-        }
-
-        /* =========================
-           TITLEBAR
-           ========================= */
+        /* BODY */
 
         renderer.drawRect(
             window.x,
             window.y,
             window.width,
-            36,
+            window.height,
+            window.focused
+                ? UITheme::focusedWindow()
+                : UITheme::normalWindow()
+        );
+
+        /* TITLEBAR */
+
+        renderer.drawRect(
+            window.x,
+            window.y,
+            window.width,
+            42,
             UITheme::titlebar()
         );
 
-        /* =========================
-           WINDOW TITLE
-           ========================= */
-
-        textRenderer.drawText(
-            renderer,
-            font,
-            window.title,
-            window.x + 14,
-            window.y + 9,
-            SDL_Color{
-                255,
-                255,
-                255,
-                255
-            }
-        );
-
-        /* =========================
-           CLOSE BUTTON
-           ========================= */
+        /* CONTROL BUTTONS */
 
         renderer.drawRect(
-            window.x +
-            window.width -
-            24,
-
-            window.y +
-            12,
-
+            window.x + window.width - 28,
+            window.y + 14,
             10,
             10,
-
-            Color(
-                255,
-                95,
-                95
-            )
+            Color(255,90,90)
         );
 
-        /* =========================
-           MINIMIZE BUTTON
-           ========================= */
+        renderer.drawRect(
+            window.x + window.width - 48,
+            window.y + 14,
+            10,
+            10,
+            Color(255,220,90)
+        );
 
         renderer.drawRect(
-            window.x +
-            window.width -
-            44,
-
-            window.y +
-            12,
-
+            window.x + window.width - 68,
+            window.y + 14,
             10,
             10,
+            Color(90,255,120)
+        );
 
+        /* CONTENT AREA */
+
+        renderer.drawRect(
+            window.x + 24,
+            window.y + 74,
+            window.width - 48,
+            window.height - 110,
             Color(
-                255,
-                220,
+                60,
+                80,
+                160,
                 90
-            )
-        );
-
-        /* =========================
-           MAXIMIZE BUTTON
-           ========================= */
-
-        renderer.drawRect(
-            window.x +
-            window.width -
-            64,
-
-            window.y +
-            12,
-
-            10,
-            10,
-
-            Color(
-                90,
-                255,
-                120
             )
         );
     }
@@ -195,10 +123,6 @@ void WindowManager::render(
 void WindowManager::handleEvents(
     SDL_Event& event
 ) {
-
-    /* =========================
-       MOUSE PRESS
-       ========================= */
 
     if (
         event.type ==
@@ -212,11 +136,8 @@ void WindowManager::handleEvents(
             event.button.y;
 
         for (
-            int i =
-            windows.size() - 1;
-
+            int i = windows.size() - 1;
             i >= 0;
-
             i--
         ) {
 
@@ -229,54 +150,36 @@ void WindowManager::handleEvents(
                 mouseX <= window.x + window.width &&
 
                 mouseY >= window.y &&
-                mouseY <= window.y + 36;
+                mouseY <= window.y + 42;
 
             if (
                 insideTitlebar
             ) {
-
-                /* REMOVE OLD FOCUS */
 
                 for (
                     auto& w :
                     windows
                 ) {
 
-                    w.focused =
-                        false;
+                    w.focused = false;
                 }
 
-                /* NEW FOCUS */
+                window.focused = true;
 
-                window.focused =
-                    true;
+                focusedWindow = i;
 
-                focusedWindow =
-                    i;
-
-                /* START DRAG */
-
-                window.dragging =
-                    true;
+                window.dragging = true;
 
                 window.dragOffsetX =
-
-                    mouseX -
-                    window.x;
+                    mouseX - window.x;
 
                 window.dragOffsetY =
-
-                    mouseY -
-                    window.y;
+                    mouseY - window.y;
 
                 break;
             }
         }
     }
-
-    /* =========================
-       MOUSE RELEASE
-       ========================= */
 
     if (
         event.type ==
@@ -288,14 +191,9 @@ void WindowManager::handleEvents(
             windows
         ) {
 
-            window.dragging =
-                false;
+            window.dragging = false;
         }
     }
-
-    /* =========================
-       MOUSE MOVE
-       ========================= */
 
     if (
         event.type ==
@@ -318,12 +216,10 @@ void WindowManager::handleEvents(
             ) {
 
                 window.x =
-
                     mouseX -
                     window.dragOffsetX;
 
                 window.y =
-
                     mouseY -
                     window.dragOffsetY;
             }
