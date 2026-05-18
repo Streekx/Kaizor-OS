@@ -1,11 +1,12 @@
-#ifndef APP_LAUNCHER_H
-#define APP_LAUNCHER_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
 
 class AppLauncher {
 
 public:
 
-    void launch(const char* app);
+    void render(
+        Renderer& renderer
+    );
 };
-
-#endif
