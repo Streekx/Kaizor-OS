@@ -8,7 +8,6 @@
 #include "graphics/renderer.hpp"
 
 #include "desktop/desktop_shell.hpp"
-
 #include "window_manager/window_manager.hpp"
 
 #include "gui/taskbar.hpp"
@@ -19,9 +18,9 @@
 
 int main() {
 
-    /* ============================
-       SDL INIT
-       ============================ */
+    // ============================
+    // SDL INIT
+    // ============================
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "[SDL] Init Failed: " << SDL_GetError() << std::endl;
@@ -38,9 +37,9 @@ int main() {
         return -1;
     }
 
-    /* ============================
-       DISPLAY SERVER
-       ============================ */
+    // ============================
+    // DISPLAY SERVER
+    // ============================
 
     DisplayServer display;
 
@@ -49,9 +48,9 @@ int main() {
         return -1;
     }
 
-    /* ============================
-       RENDERER
-       ============================ */
+    // ============================
+    // RENDERER
+    // ============================
 
     Renderer renderer;
 
@@ -60,26 +59,24 @@ int main() {
         return -1;
     }
 
-    /* ============================
-       FONT SYSTEM
-       ============================ */
+    // ============================
+    // FONT SYSTEM
+    // ============================
 
     FontManager fontManager;
 
     if (!fontManager.initialize("assets/fonts/kaizor.ttf", 18)) {
-        std::cout << "[FONT] Failed to load font: assets/fonts/default.ttf" << std::endl;
-        std::cout << "Put a TTF font in assets/fonts/default.ttf" << std::endl;
+        std::cout << "[FONT] Failed to load font: assets/fonts/kaizor.ttf" << std::endl;
         return -1;
     }
 
     TextRenderer textRenderer;
 
-    /* ============================
-       DESKTOP CORE
-       ============================ */
+    // ============================
+    // DESKTOP CORE
+    // ============================
 
     DesktopShell desktop;
-
     WindowManager wm;
 
     wm.createWindow(1, "Files", 140, 120, 420, 320);
@@ -89,9 +86,9 @@ int main() {
     Taskbar taskbar;
     Dock dock;
 
-    /* ============================
-       MAIN LOOP
-       ============================ */
+    // ============================
+    // MAIN LOOP
+    // ============================
 
     bool running = true;
     SDL_Event event;
@@ -107,16 +104,15 @@ int main() {
             wm.handleEvents(event);
         }
 
-        /* ============================
-           RENDER PIPELINE
-           ============================ */
+        // ============================
+        // RENDER PIPELINE
+        // ============================
 
         desktop.render(renderer);
 
         wm.render(renderer, textRenderer, fontManager.getFont());
 
         taskbar.render(renderer);
-
         dock.render(renderer);
 
         renderer.present();
@@ -124,9 +120,9 @@ int main() {
         SDL_Delay(16);
     }
 
-    /* ============================
-       SHUTDOWN
-       ============================ */
+    // ============================
+    // SHUTDOWN
+    // ============================
 
     fontManager.shutdown();
 
