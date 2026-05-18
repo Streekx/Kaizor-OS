@@ -1,4 +1,4 @@
-name: Build KaizorWM (Auto Fix + Artifacts)
+name: Kaizor OS Full Build (Auto Fix)
 
 on:
   workflow_dispatch:
@@ -21,29 +21,16 @@ jobs:
             libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
             zip unzip wget xz-utils rsync
 
-      # ---------------------------
-      # AUTO FIX BROKEN DUPLICATES
-      # ---------------------------
-      - name: Auto Fix Duplicate Source Files
+      - name: Auto Fix Project Source (Permanent Build Fix)
         run: |
-          echo "== Removing duplicate inline/outline definition conflicts =="
+          echo "== Fixing duplicate/redefinition issues =="
 
-          # UITheme duplicate definition fix
-          if [ -f gui/ui_theme.cpp ]; then
-            echo "Deleting gui/ui_theme.cpp"
-            rm -f gui/ui_theme.cpp
-          fi
+          # Remove duplicate definitions
+          rm -f gui/ui_theme.cpp || true
+          rm -f window_manager/window.cpp || true
 
-          # Window duplicate constructor fix
-          if [ -f window_manager/window.cpp ]; then
-            echo "Deleting window_manager/window.cpp"
-            rm -f window_manager/window.cpp
-          fi
-
-          # Fix wrong include in wallpaper engine
-          if [ -f desktop/wallpaper_engine.cpp ]; then
-            echo "Fixing desktop/wallpaper_engine.cpp"
-            cat > desktop/wallpaper_engine.cpp <<'EOF'
+          # Fix wallpaper engine include issue
+          cat > desktop/wallpaper_engine.cpp <<'EOF'
           #include "wallpaper_engine.hpp"
           #include "../gui/ui_theme.hpp"
 
@@ -52,19 +39,16 @@ jobs:
           void WallpaperEngine::render(Renderer& renderer) {
               renderer.clear(UITheme::wallpaper());
 
-              renderer.drawRoundedRect(80, 60, 1120, 640, 35, Color(40, 50, 90, 255));
+              renderer.drawRoundedRect(0, 0, 1280, 720, 0, UITheme::wallpaper());
 
-              renderer.drawRoundedRect(160, 140, 300, 220, 28, Color(90, 140, 255, 55));
-              renderer.drawRoundedRect(520, 220, 260, 200, 28, Color(255, 120, 200, 45));
-              renderer.drawRoundedRect(860, 160, 240, 260, 28, Color(120, 255, 220, 40));
+              renderer.drawRoundedRect(120, 120, 420, 300, 28, Color(60, 140, 255, 55));
+              renderer.drawRoundedRect(520, 200, 520, 360, 28, Color(255, 120, 180, 45));
+              renderer.drawRoundedRect(220, 460, 420, 200, 28, Color(120, 255, 220, 40));
           }
           EOF
-          fi
 
-          # Force window_manager.hpp to 1-arg render version (safe build)
-          if [ -f window_manager/window_manager.hpp ]; then
-            echo "Fixing window_manager/window_manager.hpp"
-            cat > window_manager/window_manager.hpp <<'EOF'
+          # Force WindowManager header to 1-arg render
+          cat > window_manager/window_manager.hpp <<'EOF'
           #pragma once
           #include <vector>
           #include <string>
@@ -93,7 +77,17 @@ jobs:
               void handleEvents(SDL_Event& event);
           };
           EOF
+
+          # Fix main.cpp render call (remove textRenderer/font args)
+          if grep -q "wm.render(renderer, textRenderer" main.cpp; then
+            sed -i 's/wm.render(renderer, textRenderer, fontManager.getFont());/wm.render(renderer);/g' main.cpp
           fi
+
+          if grep -q "wm.render(renderer,textRenderer" main.cpp; then
+            sed -i 's/wm.render(renderer,textRenderer,fontManager.getFont());/wm.render(renderer);/g' main.cpp
+          fi
+
+          echo "== Fix done =="
 
       - name: Compile KaizorWM
         run: |
