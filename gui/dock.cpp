@@ -6,34 +6,58 @@ void Dock::render(
     Renderer& renderer
 ) {
 
-    /* DOCK BACKGROUND */
+    int dockWidth = 420;
+    int dockHeight = 78;
+
+    int x = (1280 - dockWidth) / 2;
+    int y = 720 - 96;
+
+    /* SHADOW */
 
     renderer.drawRect(
-        440,
-        640,
-        400,
-        60,
+        x + 6,
+        y + 6,
+        dockWidth,
+        dockHeight,
+        UITheme::shadow()
+    );
+
+    /* DOCK BODY */
+
+    renderer.drawRect(
+        x,
+        y,
+        dockWidth,
+        dockHeight,
         UITheme::dock()
     );
 
-    /* APP ICONS */
+    /* ICONS */
 
-    int iconX = 470;
+    int iconX = x + 28;
 
     for (
         int i = 0;
-        i < 5;
+        i < 6;
         i++
     ) {
 
         renderer.drawRect(
             iconX,
-            652,
-            36,
-            36,
-            UITheme::accent()
+            y + 18,
+            42,
+            42,
+            UITheme::accentBlue()
         );
 
-        iconX += 70;
+        renderer.drawRect(
+            iconX + 6,
+            y + 24,
+            30,
+            30,
+            UITheme::accentCyan()
+        );
+
+        iconX += 62;
     }
 }
