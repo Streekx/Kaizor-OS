@@ -1,4 +1,4 @@
-name: Build Kaizor OS ISO (FreeBSD)
+name: Kaizor OS Full Build (Linux + FreeBSD Assets)
 
 on:
   workflow_dispatch:
@@ -6,96 +6,105 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-linux:
+    name: Build KaizorWM on Ubuntu (SDL2)
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 60
 
     steps:
-      - name: Checkout Kaizor-OS
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install tools
+      - name: Install Build Dependencies
         run: |
           sudo apt update
-          sudo apt install -y qemu-system-x86 qemu-utils wget xz-utils rsync
+          sudo apt install -y g++ make cmake pkg-config \
+            libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
+            zip unzip wget xz-utils rsync
 
-      - name: Download FreeBSD VM image
+      - name: Compile KaizorWM
         run: |
-          mkdir -p freebsd_vm
-          cd freebsd_vm
-          wget -O freebsd.qcow2.xz https://download.freebsd.org/ftp/releases/VM-IMAGES/14.1-RELEASE/amd64/Latest/FreeBSD-14.1-RELEASE-amd64.qcow2.xz
-          unxz freebsd.qcow2.xz
-
-      - name: Prepare share folder
-        run: |
-          mkdir -p share
-          rsync -a --exclude ".git" ./ share/Kaizor-OS
-
-      - name: Create build script for FreeBSD VM
-        run: |
-          cat > share/build.sh <<'EOF'
-          #!/bin/sh
-          set -e
-
-          echo "[VM] Mounting hostshare..."
-          mkdir -p /mnt/host
-          mount -t virtfs hostshare /mnt/host || true
-
-          echo "[VM] Installing packages..."
-          pkg update -f
-          pkg install -y llvm16 pkgconf gmake cmake \
-            xorg dbus hald sdl2 sdl2_ttf sdl2_image
-
-          echo "[VM] Copy source..."
-          rm -rf /root/Kaizor-OS
-          cp -r /mnt/host/Kaizor-OS /root/Kaizor-OS
-          cd /root/Kaizor-OS
-
-          echo "[VM] Build KaizorWM..."
-          clang++ main.cpp \
+          g++ main.cpp \
             graphics/*.cpp \
             gui/*.cpp \
             desktop/*.cpp \
             window_manager/*.cpp \
             apps/*.cpp \
             effects/*.cpp \
-            -I/usr/local/include \
-            -L/usr/local/lib \
             -lSDL2 -lSDL2_ttf -lSDL2_image \
             -o kaizorwm
 
-          echo "[VM] Creating ISO root overlay..."
-          mkdir -p /root/out_iso/usr/local/bin
-          cp kaizorwm /root/out_iso/usr/local/bin/kaizorwm
+      - name: Create Kaizor Overlay Folder
+        run: |
+          mkdir -p build_output/overlay/usr/local/bin
+          mkdir -p build_output/overlay/etc/X11/xorg.conf.d
+          mkdir -p build_output/overlay/root
 
-          echo "[VM] Copy overlay configs..."
-          if [ -d "/root/Kaizor-OS/overlay" ]; then
-            cp -R /root/Kaizor-OS/overlay/* /root/out_iso/
-          fi
+          cp kaizorwm build_output/overlay/usr/local/bin/kaizorwm
 
-          echo "[VM] Packing final Kaizor overlay tar..."
-          mkdir -p /mnt/host/output
-          tar -czf /mnt/host/output/kaizor_overlay.tar.gz -C /root/out_iso .
-
-          echo "[VM] DONE."
+          # rc.conf
+          cat > build_output/overlay/etc/rc.conf <<'EOF'
+          dbus_enable="YES"
+          hald_enable="YES"
+          moused_enable="YES"
           EOF
 
-          chmod +x share/build.sh
+          # rc.local (auto start GUI)
+          cat > build_output/overlay/etc/rc.local <<'EOF'
+          #!/bin/sh
+          service dbus start
+          service hald start
+          service moused start
+          su - root -c "startx /usr/local/bin/kaizor-session -- :0 vt1" &
+          EOF
+          chmod +x build_output/overlay/etc/rc.local
 
-      - name: Boot VM and build overlay
+          # Kaizor session launcher
+          cat > build_output/overlay/usr/local/bin/kaizor-session <<'EOF'
+          #!/bin/sh
+          export HOME=/root
+          export LANG=en_US.UTF-8
+          export SDL_VIDEODRIVER=x11
+          exec /usr/local/bin/kaizorwm
+          EOF
+          chmod +x build_output/overlay/usr/local/bin/kaizor-session
+
+          # X init file
+          cat > build_output/overlay/root/.xinitrc <<'EOF'
+          exec /usr/local/bin/kaizor-session
+          EOF
+
+          # Safe Xorg fallback driver (reduces blank screen risk)
+          cat > build_output/overlay/etc/X11/xorg.conf.d/00-kaizor.conf <<'EOF'
+          Section "Device"
+              Identifier "Card0"
+              Driver "scfb"
+          EndSection
+          EOF
+
+      - name: Download FreeBSD ISO (Base Engine)
         run: |
-          qemu-system-x86_64 \
-            -m 4096 \
-            -smp 2 \
-            -drive file=freebsd_vm/freebsd.qcow2,format=qcow2 \
-            -virtfs local,path=share,mount_tag=hostshare,security_model=none,id=hostshare \
-            -nographic \
-            -serial mon:stdio \
-            -net nic -net user \
-            -no-reboot
+          mkdir -p build_output/freebsd_iso
+          cd build_output/freebsd_iso
 
-      - name: Upload Kaizor overlay artifact
+          wget -O FreeBSD.iso.xz \
+            https://download.freebsd.org/ftp/releases/ISO-IMAGES/14.1/FreeBSD-14.1-RELEASE-amd64-disc1.iso.xz
+
+          unxz FreeBSD.iso.xz
+
+          ls -lh FreeBSD.iso
+
+      - name: Pack Kaizor Overlay
+        run: |
+          cd build_output
+          tar -czf kaizor_overlay.tar.gz -C overlay .
+          ls -lh kaizor_overlay.tar.gz
+
+      - name: Upload Artifacts (ISO + Overlay + Binary)
         uses: actions/upload-artifact@v4
         with:
-          name: kaizor-overlay
-          path: share/output/kaizor_overlay.tar.gz
+          name: kaizor-build-output
+          path: |
+            kaizorwm
+            build_output/kaizor_overlay.tar.gz
+            build_output/freebsd_iso/FreeBSD.iso
