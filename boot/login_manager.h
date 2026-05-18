@@ -1,11 +1,12 @@
-#ifndef LOGIN_MANAGER_H
-#define LOGIN_MANAGER_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
 
 class LoginManager {
 
 public:
 
-    void login();
+    void render(
+        Renderer& renderer
+    );
 };
-
-#endif
