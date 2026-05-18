@@ -1,11 +1,22 @@
-#ifndef SPLASH_H
-#define SPLASH_H
+#pragma once
 
-class Splash {
+#include "../graphics/renderer.hpp"
+
+class SplashScreen {
+
+private:
+
+    int frame;
 
 public:
 
-    void show();
-};
+    SplashScreen();
 
-#endif
+    bool finished();
+
+    void update();
+
+    void render(
+        Renderer& renderer
+    );
+};
