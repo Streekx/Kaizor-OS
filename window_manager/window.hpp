@@ -1,11 +1,11 @@
 #pragma once
 
 #include <string>
+#include "../graphics/renderer.hpp"
+#include "../graphics/color.hpp"
 
 class Window {
-
-public:
-
+private:
     int id;
     std::string title;
 
@@ -16,10 +16,7 @@ public:
 
     bool focused;
 
-    bool dragging;
-    int dragOffsetX;
-    int dragOffsetY;
-
+public:
     Window(
         int winId,
         const std::string& winTitle,
@@ -27,21 +24,18 @@ public:
         int posY,
         int w,
         int h
-    ) {
+    );
 
-        id = winId;
-        title = winTitle;
+    bool contains(int mx, int my) const;
 
-        x = posX;
-        y = posY;
+    void setFocused(bool value);
 
-        width = w;
-        height = h;
+    void render(Renderer& renderer, const Color& bg);
 
-        focused = false;
-        dragging = false;
-
-        dragOffsetX = 0;
-        dragOffsetY = 0;
-    }
+    // Getters
+    int getX() const;
+    int getY() const;
+    int getWidth() const;
+    int getHeight() const;
+    const std::string& getTitle() const;
 };
