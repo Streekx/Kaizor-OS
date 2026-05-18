@@ -77,6 +77,10 @@ int main() {
     // ============================
 
     DesktopShell desktop;
+    desktop.wallpaper.loadWallpaper(
+    renderer.getSDLRenderer()
+);
+    
     WindowManager wm;
 
     wm.createWindow(1, "Files", 140, 120, 420, 320);
