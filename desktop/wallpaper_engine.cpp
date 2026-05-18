@@ -1,58 +1,94 @@
 #include "wallpaper_engine.hpp"
-#include "../gui/ui_theme.hpp"
+
 #include <iostream>
 
-WallpaperEngine::WallpaperEngine()
-    : wallpaperTexture(nullptr) {
+WallpaperEngine::WallpaperEngine() {
+
+    wallpaperTexture = nullptr;
 }
 
-bool WallpaperEngine::loadWallpaper(SDL_Renderer* sdlRenderer) {
+bool WallpaperEngine::loadWallpaper(
+    SDL_Renderer* sdlRenderer
+) {
 
-    if (wallpaperTexture != nullptr) {
-        SDL_DestroyTexture(wallpaperTexture);
-        wallpaperTexture = nullptr;
-    }
-
-    SDL_Surface* surface = IMG_Load("assets/wallpapers/default_wallpaper_kaizor.png");
+    SDL_Surface* surface = IMG_Load(
+        "assets/wallpapers/default_wallpaper_kaizor.png"
+    );
 
     if (!surface) {
-        std::cout << "[WALLPAPER] Failed to load wallpaper: " << IMG_GetError() << std::endl;
+
+        std::cout
+            << "[WALLPAPER] Failed: "
+            << IMG_GetError()
+            << std::endl;
+
         return false;
     }
 
-    wallpaperTexture = SDL_CreateTextureFromSurface(sdlRenderer, surface);
+    wallpaperTexture = SDL_CreateTextureFromSurface(
+        sdlRenderer,
+        surface
+    );
+
     SDL_FreeSurface(surface);
 
     if (!wallpaperTexture) {
-        std::cout << "[WALLPAPER] Failed to create texture: " << SDL_GetError() << std::endl;
+
+        std::cout
+            << "[WALLPAPER] Texture Failed"
+            << std::endl;
+
         return false;
     }
 
-    std::cout << "[WALLPAPER] Wallpaper Loaded" << std::endl;
+    std::cout
+        << "[WALLPAPER] Loaded"
+        << std::endl;
+
     return true;
 }
 
-void WallpaperEngine::render(Renderer& renderer) {
+void WallpaperEngine::render(
+    Renderer& renderer
+) {
 
-    // If wallpaper image loaded, draw it
-    if (wallpaperTexture != nullptr) {
-        renderer.drawTexture(wallpaperTexture, 0, 0, 1280, 720);
+    /* fallback background */
+
+    renderer.clear(
+        Color(
+            5,
+            8,
+            20
+        )
+    );
+
+    if (!wallpaperTexture) {
         return;
     }
 
-    // Fallback solid background (prevents black screen)
-    renderer.clear(UITheme::wallpaper());
+    SDL_Rect rect = {
+        0,
+        0,
+        1280,
+        720
+    };
 
-    // Simple gradient style blocks
-    renderer.drawRoundedRect(0, 0, 1280, 720, 0, UITheme::wallpaper());
-    renderer.drawRoundedRect(120, 120, 420, 300, 28, Color(60, 140, 255, 55));
-    renderer.drawRoundedRect(520, 200, 520, 360, 28, Color(255, 120, 180, 45));
-    renderer.drawRoundedRect(220, 460, 420, 200, 28, Color(120, 255, 220, 40));
+    SDL_RenderCopy(
+        renderer.getSDLRenderer(),
+        wallpaperTexture,
+        NULL,
+        &rect
+    );
 }
 
 void WallpaperEngine::destroy() {
-    if (wallpaperTexture != nullptr) {
-        SDL_DestroyTexture(wallpaperTexture);
+
+    if (wallpaperTexture) {
+
+        SDL_DestroyTexture(
+            wallpaperTexture
+        );
+
         wallpaperTexture = nullptr;
     }
 }
