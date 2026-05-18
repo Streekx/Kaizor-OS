@@ -1,17 +1,47 @@
-#include <iostream>
-
 #include "lock_screen.h"
 
-using namespace std;
+void LockScreen::render(
+    Renderer& renderer
+) {
 
-void LockScreen::lock() {
+    renderer.drawRect(
+        0,
+        0,
+        1280,
+        720,
+        Color(
+            0,
+            0,
+            0,
+            140
+        )
+    );
 
-    cout << "[LOCK SCREEN] Locked"
-         << endl;
-}
+    renderer.drawRoundedRect(
+        470,
+        180,
+        340,
+        260,
+        28,
+        Color(
+            20,
+            24,
+            40,
+            235
+        )
+    );
 
-void LockScreen::unlock() {
-
-    cout << "[LOCK SCREEN] Unlocked"
-         << endl;
+    renderer.drawRoundedRect(
+        570,
+        220,
+        140,
+        140,
+        70,
+        Color(
+            90,
+            140,
+            255,
+            255
+        )
+    );
 }
