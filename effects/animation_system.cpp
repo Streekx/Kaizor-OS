@@ -2,22 +2,23 @@
 
 AnimationSystem::AnimationSystem() {
 
-    animationTime = 0.0f;
+    animationValue = 0.0f;
 }
 
 void AnimationSystem::update() {
 
-    animationTime += 0.016f;
+    if (animationValue < 1.0f) {
 
-    if (
-        animationTime > 1000.0f
-    ) {
+        animationValue += 0.015f;
+    }
 
-        animationTime = 0.0f;
+    if (animationValue > 1.0f) {
+
+        animationValue = 1.0f;
     }
 }
 
-float AnimationSystem::getAnimationTime() {
+float AnimationSystem::value() {
 
-    return animationTime;
+    return animationValue;
 }
