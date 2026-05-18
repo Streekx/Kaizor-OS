@@ -1,11 +1,23 @@
-#ifndef DESKTOP_SHELL_HPP
-#define DESKTOP_SHELL_HPP
+#pragma once
+
+#include "../graphics/renderer.hpp"
+
+#include "wallpaper_engine.hpp"
+#include "desktop_icons.hpp"
 
 class DesktopShell {
 
+private:
+
+    WallpaperEngine wallpaper;
+
+    DesktopIcons icons;
+
 public:
 
-    void load();
-};
+    DesktopShell();
 
-#endif
+    void render(
+        Renderer& renderer
+    );
+};
