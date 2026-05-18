@@ -66,7 +66,7 @@ int main() {
 
     FontManager fontManager;
 
-    if (!fontManager.initialize("assets/fonts/default.ttf", 18)) {
+    if (!fontManager.initialize("assets/fonts/kaizor.ttf", 18)) {
         std::cout << "[FONT] Failed to load font: assets/fonts/default.ttf" << std::endl;
         std::cout << "Put a TTF font in assets/fonts/default.ttf" << std::endl;
         return -1;
