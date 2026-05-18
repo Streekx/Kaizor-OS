@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "notification_center.hpp"
+#include "notification_center.h"
 
 using namespace std;
 
