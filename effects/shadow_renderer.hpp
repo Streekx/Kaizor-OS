@@ -6,7 +6,7 @@ class ShadowRenderer {
 
 public:
 
-    void renderShadow(
+    void render(
         Renderer& renderer,
         int x,
         int y,
