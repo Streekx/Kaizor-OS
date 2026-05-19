@@ -1,13 +1,13 @@
-#ifndef LOCK_SCREEN_H
-#define LOCK_SCREEN_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
+#include "../graphics/color.hpp"
 
 class LockScreen {
 
 public:
 
-    void lock();
-
-    void unlock();
+    void render(
+        Renderer& renderer
+    );
 };
-
-#endif
