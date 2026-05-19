@@ -1,13 +1,12 @@
-#ifndef BLUR_ENGINE_H
-#define BLUR_ENGINE_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
 
 class BlurEngine {
 
 public:
 
-    void initialize();
-
-    void applyBlur();
+    void render(
+        Renderer& renderer
+    );
 };
-
-#endif
