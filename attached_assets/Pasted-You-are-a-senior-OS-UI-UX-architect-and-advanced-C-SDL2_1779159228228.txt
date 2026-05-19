@@ -1,0 +1,302 @@
+You are a senior OS UI/UX architect and advanced C++/SDL2 desktop environment engineer.
+
+Project:
+Kaizor-OS
+
+Goal:
+Transform the current primitive SDL prototype into a highly polished, modern, premium desktop environment inspired by:
+- Windows 11/12
+- macOS Sonoma / Sequoia
+- KDE Plasma 6
+- Deepin Linux
+- Hyprland glass UI
+
+IMPORTANT:
+Do NOT create fake mockup code.
+Do NOT generate placeholder rectangles only.
+Do NOT simplify architecture.
+Do NOT remove existing project structure.
+
+You must UPGRADE the existing architecture professionally.
+
+====================================================
+PROJECT RULES
+====================================================
+
+1. Keep full existing folder structure.
+
+2. Every system must remain modular.
+
+3. No giant single-file code.
+
+4. Use proper architecture:
+- renderer layer
+- compositor layer
+- widget system
+- animation engine
+- icon engine
+- wallpaper engine
+- theme engine
+- app framework
+- input framework
+
+5. Use modern OOP architecture.
+
+6. Use clean C++17.
+
+7. Keep SDL2 backend.
+
+8. Everything must compile properly.
+
+9. Never generate incomplete headers.
+
+10. Every cpp must match hpp declarations exactly.
+
+11. No duplicate class names.
+
+12. No fake code comments without implementation.
+
+====================================================
+VISUAL TARGET
+====================================================
+
+Create a TRUE premium modern desktop.
+
+The desktop must feel:
+- futuristic
+- glassmorphism based
+- smooth
+- premium
+- modern
+- cinematic
+- polished
+- animated
+
+The current UI looks primitive and old.
+Completely redesign it.
+
+====================================================
+DESKTOP REQUIREMENTS
+====================================================
+
+Create:
+
+✔ Dynamic wallpaper system
+✔ Real wallpaper loading
+✔ Blur glass compositor
+✔ Transparency engine
+✔ Rounded corners everywhere
+✔ Smooth shadows
+✔ Window animations
+✔ Hover animations
+✔ App launcher
+✔ Search bar
+✔ Start menu
+✔ Modern dock
+✔ Live taskbar
+✔ Notification center
+✔ Clock widget
+✔ Battery widget
+✔ WiFi widget
+✔ Volume widget
+✔ Control center
+✔ Workspace switcher
+✔ Lock screen
+✔ Login screen
+✔ Boot animation
+✔ Power menu
+✔ Window snapping
+✔ Resizable windows
+✔ Draggable windows
+✔ Minimize/maximize
+✔ Focus effects
+✔ Dynamic accent colors
+✔ Theme switching
+✔ Dark/light themes
+✔ Smooth transitions
+✔ Cursor rendering
+✔ SVG icon rendering
+✔ Proper app icons
+✔ Multi-layer rendering
+✔ FPS optimized rendering
+
+====================================================
+WINDOW STYLE
+====================================================
+
+Windows must look:
+- semi-transparent
+- blurred
+- layered
+- animated
+- shadowed
+- smooth
+- anti-aliased
+
+Add:
+- close button
+- maximize button
+- minimize button
+- glow effects
+- active/inactive states
+- resize borders
+- snapping guides
+
+====================================================
+DOCK REQUIREMENTS
+====================================================
+
+Dock must behave similar to:
+- macOS dock
+- Windows 11 centered dock
+
+Add:
+- icon scaling on hover
+- smooth animations
+- glass background
+- reflections
+- spacing
+- app indicators
+- running app dots
+
+====================================================
+TASKBAR REQUIREMENTS
+====================================================
+
+Taskbar should include:
+- start button
+- search
+- pinned apps
+- system tray
+- time/date
+- quick settings
+- notifications
+
+====================================================
+GRAPHICS REQUIREMENTS
+====================================================
+
+Implement:
+- GPU accelerated renderer support
+- layered compositing
+- alpha blending
+- blur simulation
+- shadows
+- gradients
+- glow rendering
+- anti-flicker rendering
+- double buffering
+
+====================================================
+APP FRAMEWORK
+====================================================
+
+Create realistic built-in apps:
+
+✔ File Manager
+✔ Browser
+✔ Terminal
+✔ Settings
+✔ Music Player
+✔ App Store
+✔ System Monitor
+
+Apps must have:
+- proper layouts
+- sidebar
+- icons
+- topbars
+- tabs
+- buttons
+- scroll areas
+
+====================================================
+ICON SYSTEM
+====================================================
+
+Replace primitive colored rectangles.
+
+Implement:
+- PNG icon loading
+- SVG icon support
+- icon cache
+- icon themes
+
+Use premium modern icon style:
+- Fluent icons
+- macOS icons
+- glass icons
+
+====================================================
+ANIMATION SYSTEM
+====================================================
+
+Implement:
+- easing animations
+- fade animations
+- zoom animations
+- dock hover scaling
+- smooth startup transitions
+- window open/close animations
+
+60 FPS target.
+
+====================================================
+FILE REQUIREMENTS
+====================================================
+
+You must:
+- create missing files
+- repair broken includes
+- fix compile errors
+- repair architecture mismatches
+- remove duplicate systems
+- standardize naming
+
+Ensure:
+ALL files compile successfully.
+
+====================================================
+CRITICAL REQUIREMENT
+====================================================
+
+Do NOT stop halfway.
+Do NOT leave TODO sections.
+Do NOT generate fake architecture.
+
+Fully implement real working systems.
+
+====================================================
+OUTPUT REQUIREMENT
+====================================================
+
+For every generated file:
+1. Provide FULL file content.
+2. Mention exact file path.
+3. Ensure compile compatibility.
+4. Maintain modularity.
+
+Also generate:
+- updated Makefile
+- build script
+- asset loader
+- sample icon assets list
+- wallpaper loader
+- runtime instructions
+
+====================================================
+FINAL TARGET
+====================================================
+
+The final result should visually feel beyond:
+- Windows 11
+- macOS
+- KDE Plasma
+
+with:
+- futuristic glass UI
+- smooth animations
+- modern desktop effects
+- premium professional quality
+
+Generate production-quality architecture only.
