@@ -1,10 +1,11 @@
 #include "blur_engine.hpp"
 
+BlurEngine::BlurEngine() {
+}
+
 void BlurEngine::render(
     Renderer& renderer
 ) {
-
-    /* FAKE GLASS OVERLAY */
 
     renderer.drawRect(
         0,
@@ -18,8 +19,6 @@ void BlurEngine::render(
             6
         )
     );
-
-    /* DARK GLASS */
 
     renderer.drawRect(
         0,
