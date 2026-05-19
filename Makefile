@@ -33,9 +33,9 @@ SRC = main.cpp \
       gui/ui_theme.cpp \
       \
       apps/terminal_app.cpp \
-      apps/browser_app.cpp \
       apps/file_manager_app.cpp \
-      apps/settings_app.cpp
+      apps/settings_app.cpp \
+      apps/task_manager_app.cpp
 
 # Filter to only files that exist on disk
 EXISTING_SRC = $(wildcard $(SRC))

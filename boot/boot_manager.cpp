@@ -49,10 +49,9 @@ bool BootManager::initialize() {
     desktop->wallpaper.loadWallpaper(renderer.getSDLRenderer());
 
     wm = new WindowManager();
-    wm->createWindow(1, "Files",    AppType::FILES,    100,  80,  860, 540);
-    wm->createWindow(2, "Terminal", AppType::TERMINAL, 160, 100,  780, 480);
-    wm->createWindow(3, "Browser",  AppType::BROWSER,  220, 120,  900, 560);
-    wm->createWindow(4, "Settings", AppType::SETTINGS, 280, 140,  820, 500);
+    // Start with Files and Terminal open
+    wm->createWindow(1, "Files",    AppType::FILES,    80,   60,  860, 570);
+    wm->createWindow(2, "Terminal", AppType::TERMINAL, 180, 100,  760, 480);
 
     taskbar = new Taskbar();
     dock    = new Dock();
@@ -66,6 +65,17 @@ void BootManager::advanceTo(BootPhase next) {
     phase = next;
     std::cout << "[BOOT] Phase -> " << (int)next << std::endl;
 }
+
+// Map dock AppType int to enum and titles
+static const struct { int dockVal; AppType type; const char* title; int w; int h; } APP_MAP[] = {
+    { 2, AppType::FILES,        "Files",        860, 570 },
+    { 1, AppType::TERMINAL,     "Terminal",     760, 480 },
+    { 4, AppType::SETTINGS,     "Settings",     900, 560 },
+    { 5, AppType::NOTES,        "Notes",        820, 520 },
+    { 6, AppType::CALENDAR,     "Calendar",     860, 560 },
+    { 3, AppType::TASK_MANAGER, "Task Manager", 920, 580 },
+};
+static const int APP_MAP_COUNT = 6;
 
 void BootManager::handleEvent(SDL_Event& e) {
     if (e.type == SDL_QUIT) {
@@ -116,18 +126,43 @@ void BootManager::handleEvent(SDL_Event& e) {
                     return;
                 }
             }
+
             // Click on the K/Start button in the taskbar opens the launcher
             if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
                 int mx2 = e.button.x, my2 = e.button.y;
-                if (mx2 >= 3 && mx2 <= 45 && my2 >= 2 && my2 <= 36) {
+
+                // Taskbar K button
+                if (mx2 >= 3 && mx2 <= 45 && my2 >= 2 && my2 <= Taskbar::HEIGHT - 2) {
                     desktop->launcher.toggle();
                     return;
                 }
+
+                // Dock click → open/focus app window
+                int clickedApp = dock->getClickedApp(mx2, my2);
+                if (clickedApp >= 0) {
+                    for (int i = 0; i < APP_MAP_COUNT; i++) {
+                        if (APP_MAP[i].dockVal == clickedApp) {
+                            // Offset each window slightly so they don't fully overlap
+                            int ox = 60 + (clickedApp % 4) * 40;
+                            int oy = 50 + (clickedApp % 3) * 30;
+                            wm->focusOrCreate(
+                                clickedApp + 100,
+                                APP_MAP[i].title,
+                                APP_MAP[i].type,
+                                ox, oy,
+                                APP_MAP[i].w, APP_MAP[i].h);
+                            desktop->launcher.close();
+                            return;
+                        }
+                    }
+                }
             }
+
             desktop->setMousePos(mouseX, mouseY);
             taskbar->setMousePos(mouseX, mouseY);
             dock->setMousePos(mouseX, mouseY);
             desktop->handleEvent(e);
+            taskbar->handleEvent(e, screenW);
             wm->handleEvent(e);
             break;
 
