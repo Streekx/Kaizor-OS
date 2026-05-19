@@ -2,68 +2,76 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "../graphics/renderer.hpp"
 #include "../graphics/color.hpp"
-#include "../gui/text_renderer.hpp"
+
+enum class AppType {
+    NONE,
+    TERMINAL,
+    FILES,
+    BROWSER,
+    SETTINGS
+};
 
 class Window {
 public:
-    int id;
-    std::string title;
+    static constexpr int TITLEBAR_H = 44;
+    static constexpr int MIN_W      = 300;
+    static constexpr int MIN_H      = 200;
 
-    int x;
-    int y;
-    int width;
-    int height;
+    int         id;
+    std::string title;
+    AppType     appType;
+
+    int x, y, width, height;
+    int savedX, savedY, savedW, savedH;
 
     bool focused;
+    bool minimized;
+    bool maximized;
+    bool pendingClose;
 
-public:
-    Window(
-        int winId,
-        const std::string& winTitle,
-        int posX,
-        int posY,
-        int w,
-        int h
-    );
+    Window(int id, const std::string& title, AppType type,
+           int x, int y, int w, int h);
 
     bool contains(int mx, int my) const;
+    bool titlebarContains(int mx, int my) const;
+    bool closeContains(int mx, int my) const;
+    bool minContains(int mx, int my) const;
+    bool maxContains(int mx, int my) const;
 
-    void setFocused(bool value);
-
-    void render(Renderer& renderer, const Color& bg);
-
-    int getX() const;
-    int getY() const;
-    int getWidth() const;
-    int getHeight() const;
-    const std::string& getTitle() const;
+    SDL_Rect getContentRect() const;
 };
 
 class WindowManager {
 private:
     std::vector<Window> windows;
-    int focusedWindow;
+
+    bool isDragging;
+    int  dragIdx;
+    int  dragOfsX, dragOfsY;
+
+    int  mouseX, mouseY;
+
+    void drawWindowChrome(Renderer& r, TTF_Font* font, TTF_Font* smallFont,
+                          const Window& win) const;
+    void drawAppContent(Renderer& r, TTF_Font* font, TTF_Font* smallFont,
+                        const Window& win);
 
 public:
     WindowManager();
 
-    void createWindow(
-        int id,
-        const std::string& title,
-        int x,
-        int y,
-        int width,
-        int height
-    );
+    void createWindow(int id, const std::string& title, AppType type,
+                      int x, int y, int w, int h);
 
-    void render(
-        Renderer& renderer,
-        TextRenderer& textRenderer,
-        TTF_Font* font
-    );
+    void handleEvent(SDL_Event& e);
+    void update();
 
-    void handleEvents(SDL_Event& event);
+    void render(Renderer& r, TTF_Font* font, TTF_Font* smallFont);
+
+    const char* getFocusedTitle() const;
+    int  getWindowCount() const { return (int)windows.size(); }
 };

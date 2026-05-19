@@ -1,6 +1,7 @@
-CXX = g++
-CXXFLAGS = -Wall -std=c++17 $(shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf)
-LDFLAGS = $(shell pkg-config --libs sdl2 SDL2_image SDL2_ttf)
+CXX      = g++
+CXXFLAGS = -Wall -Wextra -std=c++17 -O2 \
+           $(shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf)
+LDFLAGS  = $(shell pkg-config --libs sdl2 SDL2_image SDL2_ttf) -lm
 
 TARGET = kaizor
 
@@ -11,19 +12,28 @@ SRC = main.cpp \
       desktop/wallpaper_engine.cpp \
       desktop/wallpaper.cpp \
       desktop/desktop_icons.cpp \
-      window_manager/window.cpp \
+      desktop/launcher.cpp \
+      desktop/notifications.cpp \
       window_manager/window_manager.cpp \
+      window_manager/window.cpp \
       gui/taskbar.cpp \
       gui/dock.cpp \
       gui/font_manager.cpp \
       gui/text_renderer.cpp \
-      gui/ui_theme.cpp
+      gui/ui_theme.cpp \
+      apps/terminal_app.cpp \
+      apps/browser_app.cpp \
+      apps/file_manager_app.cpp \
+      apps/settings_app.cpp
+
+# Filter to only existing files
+EXISTING_SRC = $(wildcard $(SRC))
 
 all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(EXISTING_SRC) -o $(TARGET) $(LDFLAGS)
 
-run:
+run: all
 	./$(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) *.o
