@@ -1,0 +1,353 @@
+You are now the LEAD UI ENGINEER and SYSTEM DESIGNER for Kaizor-OS.
+
+The current GUI still looks:
+- prototype-like
+- outdated
+- flat
+- local-project quality
+- low-end
+- unfinished
+
+THIS IS NOT ACCEPTABLE.
+
+Completely redesign the ENTIRE desktop experience into a true next-generation premium desktop environment inspired by:
+
+- Windows 12 concepts
+- macOS Sequoia
+- visionOS
+- KDE Plasma 6
+- Deepin 23
+- modern Unreal Engine UI quality
+
+========================================================
+CRITICAL REQUIREMENT
+========================================================
+
+DO NOT create:
+- primitive rectangles
+- flat boxes
+- placeholder windows
+- fake buttons
+- demo style UI
+- local project aesthetics
+
+Everything must look:
+- premium
+- futuristic
+- cinematic
+- layered
+- polished
+- smooth
+- professional
+- modern
+- comfortable to use
+
+========================================================
+FULL GUI REDESIGN REQUIRED
+========================================================
+
+Rebuild ALL of these systems professionally:
+
+✔ Window system
+✔ Dock
+✔ Taskbar
+✔ Desktop
+✔ Widgets
+✔ Notifications
+✔ Menus
+✔ File manager
+✔ Browser
+✔ Terminal
+✔ Settings app
+✔ App launcher
+✔ Login screen
+✔ Lock screen
+
+========================================================
+WINDOW SYSTEM (VERY IMPORTANT)
+========================================================
+
+Current windows look fake and primitive.
+
+Create REAL premium windows with:
+
+✔ Rounded corners
+✔ Acrylic blur
+✔ Transparency
+✔ Dynamic shadows
+✔ Active/inactive glow
+✔ Window borders
+✔ Gradient lighting
+✔ Smooth resizing
+✔ Dragging physics
+✔ Snapping
+✔ Minimize animation
+✔ Maximize animation
+✔ Close animation
+
+========================================================
+TITLEBAR REQUIREMENTS
+========================================================
+
+Add REAL titlebars similar to:
+- macOS
+- Windows 12
+
+Must include:
+
+✔ Close button
+✔ Minimize button
+✔ Maximize button
+✔ Hover effects
+✔ Click animations
+✔ Proper spacing
+✔ Window icon
+✔ Window title
+✔ Toolbar area
+
+Buttons must visually animate.
+
+========================================================
+WINDOW CONTENT SYSTEM
+========================================================
+
+Current tabs are empty fake rectangles.
+
+This is WRONG.
+
+Create REAL usable content areas.
+
+========================================================
+FILE MANAGER
+========================================================
+
+Must include:
+
+✔ Sidebar
+✔ Navigation buttons
+✔ Search bar
+✔ Folder grid
+✔ File icons
+✔ Breadcrumb navigation
+✔ Scroll support
+✔ Toolbar
+✔ Address bar
+✔ Status bar
+
+Style:
+- Windows Explorer
+- macOS Finder
+- modern Linux file managers
+
+========================================================
+BROWSER APP
+========================================================
+
+Must include:
+
+✔ Tab system
+✔ Address bar
+✔ Back button
+✔ Forward button
+✔ Refresh button
+✔ Bookmark button
+✔ Search field
+✔ Sidebar
+✔ Modern tab animations
+
+Visual style:
+- Arc Browser
+- Edge
+- Safari
+
+========================================================
+TERMINAL APP
+========================================================
+
+Must include:
+
+✔ Real terminal layout
+✔ Prompt rendering
+✔ Scrollable area
+✔ Command history area
+✔ Smooth text rendering
+✔ Semi-transparent background
+✔ Glow cursor
+
+========================================================
+SETTINGS APP
+========================================================
+
+Must include:
+
+✔ Sidebar categories
+✔ Toggle switches
+✔ Sliders
+✔ Theme settings
+✔ Wallpaper settings
+✔ System info
+✔ Network settings
+✔ Personalization page
+
+========================================================
+DOCK REDESIGN
+========================================================
+
+Current dock still looks old.
+
+Redesign like:
+- macOS dock
+- visionOS dock
+- Windows 12 floating dock
+
+Add:
+
+✔ Hover magnification
+✔ Glass background
+✔ Reflection effects
+✔ Running indicators
+✔ App labels
+✔ Bounce animation
+✔ Glow lighting
+✔ Floating style
+
+========================================================
+TASKBAR REDESIGN
+========================================================
+
+Current taskbar looks primitive.
+
+Create:
+✔ Floating taskbar
+✔ Search box
+✔ System tray
+✔ Notification center
+✔ Clock/date
+✔ WiFi/Battery/Volume
+✔ Start menu button
+✔ Dynamic transparency
+
+========================================================
+START MENU
+========================================================
+
+Create a modern launcher similar to:
+- Windows 11/12
+- macOS Launchpad
+
+Include:
+✔ Search
+✔ Pinned apps
+✔ Categories
+✔ Recent apps
+✔ Power controls
+✔ User profile
+
+========================================================
+GRAPHICS QUALITY
+========================================================
+
+Implement:
+
+✔ Blur compositor
+✔ Multi-layer rendering
+✔ Transparency engine
+✔ Gradient rendering
+✔ Glow effects
+✔ Anti-aliased UI
+✔ Modern shadows
+✔ GPU optimized rendering
+✔ Double buffering
+
+========================================================
+ANIMATIONS
+========================================================
+
+ALL animations must be smooth.
+
+Implement:
+
+✔ Window open/close animation
+✔ Fade transitions
+✔ Dock hover scaling
+✔ Button hover animation
+✔ Menu transitions
+✔ Login fade
+✔ Startup cinematic animation
+
+Target:
+60 FPS smoothness
+
+========================================================
+ICON SYSTEM
+========================================================
+
+Replace all fake rectangles with REAL icons.
+
+Implement:
+✔ PNG icon loader
+✔ SVG icon support
+✔ Icon theme system
+✔ App icon cache
+
+Use premium icon packs similar to:
+- Fluent UI
+- macOS icons
+- Papirus
+- Deepin icons
+
+========================================================
+THEME ENGINE
+========================================================
+
+Create:
+✔ Dark mode
+✔ Light mode
+✔ Accent color system
+✔ Dynamic transparency
+✔ Material system
+
+========================================================
+DESKTOP EXPERIENCE
+========================================================
+
+Desktop should feel:
+- futuristic
+- cinematic
+- luxury
+- premium
+- highly interactive
+
+The user should feel like using:
+- a real operating system
+- not a student SDL prototype
+
+========================================================
+IMPORTANT ENGINEERING RULES
+========================================================
+
+1. Maintain modular architecture.
+2. No giant files.
+3. Every cpp must match hpp exactly.
+4. Fix all compile errors.
+5. Keep SDL2 backend.
+6. Use C++17.
+7. Ensure all windows are functional.
+8. Every button should work.
+9. Every app should contain real UI components.
+10. Avoid placeholders.
+
+========================================================
+FINAL TARGET
+========================================================
+
+Kaizor-OS must visually surpass:
+- Windows 11
+- macOS
+- KDE Plasma
+
+and look like:
+- a futuristic premium desktop environment
+- made by a professional OS company
+
+Generate production-quality UI systems only.
