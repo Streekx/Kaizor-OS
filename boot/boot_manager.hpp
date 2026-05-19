@@ -8,6 +8,7 @@
 #include "login_manager.h"
 #include "../core/session_manager.h"
 #include "../system/lock_screen.h"
+#include "../system/notification_manager.hpp"
 #include "../desktop/desktop_shell.hpp"
 #include "../window_manager/window_manager.hpp"
 #include "../gui/taskbar.hpp"
@@ -38,10 +39,13 @@ private:
     SessionManager* sessionMgr;
     LockScreen*     lockScreen;
 
-    DesktopShell*  desktop;
-    WindowManager* wm;
-    Taskbar*       taskbar;
-    Dock*          dock;
+    DesktopShell*         desktop;
+    WindowManager*        wm;
+    Taskbar*              taskbar;
+    Dock*                 dock;
+    NotificationManager*  notifMgr;
+
+    float notifTimer;
 
     int   mouseX, mouseY;
 

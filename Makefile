@@ -12,6 +12,7 @@ SRC = main.cpp \
       boot/login_manager.cpp \
       core/session_manager.cpp \
       system/lock_screen.cpp \
+      system/notification_manager.cpp \
       \
       graphics/display_server.cpp \
       graphics/renderer.cpp \

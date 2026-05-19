@@ -12,10 +12,13 @@ public:
     Taskbar();
 
     void setMousePos(int mx, int my);
-    void handleEvent(SDL_Event& e, int screenW = 1280);
+
+    // Returns true if the notification bell was clicked
+    bool handleEvent(SDL_Event& e, int screenW = 1280);
 
     void render(Renderer& renderer, TTF_Font* font, TTF_Font* smallFont,
-                const char* activeWindowTitle);
+                const char* activeWindowTitle,
+                int unreadNotifCount = 0);
 
     static constexpr int HEIGHT = 46;
     static constexpr int Y      = 0;
