@@ -93,7 +93,11 @@ void BootManager::handleEvent(SDL_Event& e) {
         case BootPhase::DESKTOP:
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_ESCAPE) {
-                    running = false;
+                    if (desktop->launcher.isOpen()) {
+                        desktop->launcher.close();
+                    } else {
+                        running = false;
+                    }
                     return;
                 }
                 if (e.key.keysym.sym == SDLK_l &&
@@ -104,10 +108,26 @@ void BootManager::handleEvent(SDL_Event& e) {
                     advanceTo(BootPhase::LOCK_SCREEN);
                     return;
                 }
+                // Ctrl+Space or F1 toggles the app launcher
+                if (e.key.keysym.sym == SDLK_F1 ||
+                    (e.key.keysym.sym == SDLK_SPACE &&
+                     (SDL_GetModState() & KMOD_LCTRL))) {
+                    desktop->launcher.toggle();
+                    return;
+                }
+            }
+            // Click on the K/Start button in the taskbar opens the launcher
+            if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+                int mx2 = e.button.x, my2 = e.button.y;
+                if (mx2 >= 3 && mx2 <= 45 && my2 >= 2 && my2 <= 36) {
+                    desktop->launcher.toggle();
+                    return;
+                }
             }
             desktop->setMousePos(mouseX, mouseY);
             taskbar->setMousePos(mouseX, mouseY);
             dock->setMousePos(mouseX, mouseY);
+            desktop->handleEvent(e);
             wm->handleEvent(e);
             break;
 
@@ -140,6 +160,7 @@ void BootManager::update(float dt) {
 
         case BootPhase::DESKTOP:
             wm->update();
+            desktop->update();
             break;
 
         case BootPhase::LOCK_SCREEN:
@@ -151,7 +172,7 @@ void BootManager::update(float dt) {
 }
 
 void BootManager::renderDesktop() {
-    desktop->render(renderer, fontSmall);
+    desktop->render(renderer, fontMedium, fontSmall);
     wm->render(renderer, fontMedium, fontSmall);
     taskbar->render(renderer, fontMedium, fontSmall, wm->getFocusedTitle());
     dock->render(renderer, fontMedium, fontSmall);

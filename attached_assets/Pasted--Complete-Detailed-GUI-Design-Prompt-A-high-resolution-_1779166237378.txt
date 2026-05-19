@@ -1,0 +1,24 @@
+​Complete & Detailed GUI Design Prompt:
+​A high-resolution, photorealistic, premium desktop operating system GUI concept, based on the specific application (Project Name: Kaizor) and structure shown in image_0.png, but completely redesigned with the high-fidelity, polished aesthetics of macOS Big Sur/Monterey (image_3.png) and Zorin OS 16 (image_1.png/image_2.png).
+​1. Base Interface & Layout:
+​Wallpaper: Retain the dramatic, detailed Zorin OS mountain and desert dune background with its beautiful purple-to-peach sunset gradient (from image_1.png/image_2.png), as the desktop backdrop.
+​Mobile Screen Container (image_0.png): The entire desktop interface is displayed inside the simulated mobile screen container from image_0.png, complete with the top-level Android status bar (time 10:13, Bluetooth icon, battery 18%, 5G+) and the bottom-level function bar (ESC, HOME, PGDN, keyboard icons), preserving the original context.
+​Replit Browser Window: The main central focus is the Kaizor web browser window from image_0.png, but re-styled as a transparent, frosted-glass-like macOS window.
+​Zorin Taskbar: At the very bottom of the container's main display area (above the function bar), include the complete translucent taskbar from image_1.png/image_2.png, with the Zorin logo (top left of taskbar), and all original taskbar icons (Chrome, Zorin Appearance, etc.), along with the right-side notification icons (time, network, speaker).
+​2. Detailed Window Content (Re-imagined for Kaizor Browser):
+​Window Title: "Browser - [Kaizor New Tab]" in a sleek, professional font (SF Pro), with the macOS-style red/yellow/green control dots in the top left.
+​Tab Bar (macOS style): Add professional, distinct tabs: [New Tab] with a subtle blue dot, Kaizor Docs, GitHub, and a + button, all with a glossy, frosted-glass look.
+​Address Bar: Below the tabs, a polished address bar with a small, updated Kaizor Docs icon and the URL text: kaizor://new-tab.
+​Favorites Toolbar (macOS style): A clean toolbar below the address bar with the favorites links from image_0.png (Kaizor Docs, FreeBSD.org, GitHub, Ports), styled like the clean links in the macOS image_3.png top menu bar.
+​3. Window Main Body & App Dock:
+​Central Content: The main central text 03:21 and Monday, May 19, 2026 must be retained in the center, but using the elegant, professional font seen in the macOS clock. Below it, the refined search bar: Search the web or enter URL ....
+​Re-designed Top Icons (Mail/Docs/etc.): The older-style icons from image_0.png (Mail, Docs, Files, Code) must be replaced with higher-quality, professional, 3D macOS-style versions of those specific apps.
+​New macOS-Style Dock: The main highlight is replacing the old central dock from image_0.png with a stunning, translucent, macOS-style dock, identical in style and with all the actual macOS icons and folder icons from image_3.png (Finder, Mail, Maps, Photos, FaceTime, etc.), centered and slightly floating at the bottom of the window. Maintain the small blue status lights under the active apps. This dock must feel integral to the interface, not just overlaid.
+​Folder System: Inside the window (or accessible via a taskbar shortcut like Zorin's file manager in image_2.png), show an instance of the "Files" browser (like image_2.png), displaying standard Zorin-style user folders (Desktop, Documents, Downloads, etc.) with their icons, but refined to match the new high-quality standard.
+​4. All Options and Buttons:
+​Zorin Menu: Add the comprehensive Zorin OS app menu (from image_1.png) to the bottom-left corner of the window's display area (overlapping the taskbar area). It must display the user avatar (Artyom Zorin), name, "All Apps" button, search bar, and all category folders (Accessories, Graphics, Internet, etc.) with their modern icons. Also, add the Zorin-specific system icons like Software, Settings, and Zorin Appearance and the bottom power controls (Log out, Lock, Shutdown) from image_1.png.
+​Window Settings: All window components (buttons, sliders, toggles) should be modern and have consistent styling.
+​5. Fluidity & Lighting:
+​Glow and Shadows: The entire browser window and the app dock should cast a subtle, soft shadow onto the Zorin OS background. Icons should have refined lighting and 3D depth, moving away from flat design towards skeuomorphic/Neumorphic textures (like in image_3.png).
+​Interactivity Cue: Add a very subtle, soft blue glow around one or two of the new macOS dock icons (e.g., Finder and Mail) to imply a hovering mouse or active touch interaction.
+​Translucency: Ensure a high degree of "frosted glass" transparency on the dock and window title bar, with background elements subtly blurred and colored by the new lighting, creating a deep, premium feel.

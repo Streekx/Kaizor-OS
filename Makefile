@@ -20,6 +20,7 @@ SRC = main.cpp \
       desktop/wallpaper_engine.cpp \
       desktop/wallpaper.cpp \
       desktop/desktop_icons.cpp \
+      desktop/app_launcher.cpp \
       desktop/launcher.cpp \
       desktop/notifications.cpp \
       \
