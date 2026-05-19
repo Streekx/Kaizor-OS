@@ -1,5 +1,8 @@
 #include "cursor.h"
 
+#include "../graphics/renderer.hpp"
+#include "../graphics/color.hpp"
+
 void Cursor::render(
     Renderer& renderer,
     int x,
