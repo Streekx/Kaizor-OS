@@ -1,4 +1,4 @@
-modules = ["bash"]
+modules = ["bash", "nix"]
 [agent]
 expertMode = true
 stack = "BEST_EFFORT_FALLBACK"
@@ -22,12 +22,12 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "vnc"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "make && ./kaizor"
-
-[workflows.workflow.metadata]
-outputType = "vnc"
 
 [deployment]
 deploymentTarget = "vm"
