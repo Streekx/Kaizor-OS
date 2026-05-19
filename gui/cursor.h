@@ -1,21 +1,14 @@
-#ifndef CURSOR_H
-#define CURSOR_H
+#pragma once
+
+#include "../graphics/renderer.hpp"
 
 class Cursor {
 
 public:
 
-    int x;
-    int y;
-
-    Cursor();
-
-    void move(
-        int newX,
-        int newY
+    void render(
+        Renderer& renderer,
+        int x,
+        int y
     );
-
-    void render();
 };
-
-#endif
